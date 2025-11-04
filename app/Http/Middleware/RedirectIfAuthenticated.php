@@ -21,7 +21,20 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+
+                // Ambil user yang sedang login
+                $user = Auth::guard($guard)->user();
+                // ATAU jika kamu pakai satu guard tapi punya kolom `role` di tabel users:
+                switch ($user->role) {
+                    case 'admin':
+                        return redirect('/admin/dashboard');
+                    case 'student':
+                        return redirect('/student/dashboard');
+                    case 'teacher':
+                        return redirect('/teacher/dashboard');
+                    default:
+                        return redirect(RouteServiceProvider::DASHBOARD);
+                }
             }
         }
 
