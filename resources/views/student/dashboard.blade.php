@@ -51,14 +51,14 @@
                         <i class="fas fa-certificate mr-3"></i>
                         Sertifikat
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 hover:bg-green-700 rounded-lg transition">
+                    {{-- <a href="#" class="flex items-center px-4 py-3 hover:bg-green-700 rounded-lg transition">
                         <i class="fas fa-chart-line mr-3"></i>
                         Progress
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-3 hover:bg-green-700 rounded-lg transition">
+                    </a> --}}
+                    {{-- <a href="#" class="flex items-center px-4 py-3 hover:bg-green-700 rounded-lg transition">
                         <i class="fas fa-user mr-3"></i>
                         Profil
-                    </a>
+                    </a> --}}
                 </nav>
             </div>
 
@@ -94,10 +94,10 @@
                             Anda.</p>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+                        {{-- <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
                             <i class="fas fa-bell text-xl"></i>
                             <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
+                        </button> --}}
                         <a href="#" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                             <i class="fas fa-search mr-2"></i>Cari Kursus
                         </a>
@@ -167,18 +167,19 @@
                                         <div class="flex-1">
                                             <h4 class="font-bold text-gray-800 mb-2">{{ $enrollment->course->title }}</h4>
                                             <p class="text-sm text-gray-600 mb-3">
-                                                {{ Str::limit($enrollment->course->description, 100) }}</p>
+                                                {{ Str::limit($enrollment->course->description, 100) }}
+                                            </p>
                                             <div class="flex items-center text-sm text-gray-500">
                                                 <i class="fas fa-user mr-2"></i>
                                                 <span>{{ $enrollment->course->teacher->name }}</span>
                                             </div>
                                         </div>
                                         <span class="px-3 py-1 rounded-full text-xs font-semibold ml-4
-                                            @if($enrollment->status == 'passed' || $enrollment->status == 'certificate_issued') bg-green-100 text-green-600
-                                            @elseif($enrollment->status == 'in_progress' || $enrollment->status == 'material_completed') bg-blue-100 text-blue-600
-                                            @elseif($enrollment->status == 'quiz_attempted') bg-yellow-100 text-yellow-600
-                                            @else bg-gray-100 text-gray-600
-                                            @endif">
+                                                                    @if($enrollment->status == 'passed' || $enrollment->status == 'certificate_issued') bg-green-100 text-green-600
+                                                                    @elseif($enrollment->status == 'in_progress' || $enrollment->status == 'material_completed') bg-blue-100 text-blue-600
+                                                                    @elseif($enrollment->status == 'quiz_attempted') bg-yellow-100 text-yellow-600
+                                                                    @else bg-gray-100 text-gray-600
+                                                                    @endif">
                                             {{ ucfirst(str_replace('_', ' ', $enrollment->status)) }}
                                         </span>
                                     </div>

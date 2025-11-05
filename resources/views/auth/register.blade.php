@@ -53,7 +53,7 @@
             <div class="w-full max-w-md">
                 <!-- Logo -->
                 <div class="text-center mb-8">
-                    <a href="{{ route('welcome') }}" class="inline-flex items-center">
+                    <a href="{{ route('home') }}" class="inline-flex items-center">
                         <i class="fas fa-graduation-cap text-4xl text-purple-600"></i>
                         <span class="ml-2 text-3xl font-bold text-gray-800">TrackLearn</span>
                     </a>
@@ -275,7 +275,7 @@
 
                 <!-- Back to Home -->
                 <div class="text-center mt-6">
-                    <a href="{{ route('welcome') }}" class="text-sm text-gray-500 hover:text-gray-700">
+                    <a href="{{ route('home') }}" class="text-sm text-gray-500 hover:text-gray-700">
                         <i class="fas fa-arrow-left mr-1"></i> Kembali ke Beranda
                     </a>
                 </div>

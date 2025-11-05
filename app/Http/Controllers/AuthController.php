@@ -121,7 +121,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('welcome')->with('status', 'Anda telah berhasil logout.');
+        return redirect()->route('home')->with('status', 'Anda telah berhasil logout.');
     }
 
     /**
@@ -139,7 +139,7 @@ class AuthController extends Controller
             case 'student':
                 return redirect()->route('student.dashboard');
             default:
-                return redirect()->route('welcome');
+                return redirect()->route('home');
         }
     }
 }

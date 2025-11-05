@@ -104,9 +104,9 @@ class DashboardController extends Controller
     }
 
     /**
-     * Show homepage/welcome page
+     * Show homepage/home page
      */
-    public function welcome()
+    public function home()
     {
         $data = [
             'popularCourses' => Course::with('teacher')
@@ -119,6 +119,6 @@ class DashboardController extends Controller
             'totalTeachers' => User::where('role', 'teacher')->count(),
         ];
 
-        return view('welcome', $data);
+        return view('home', $data);
     }
 }

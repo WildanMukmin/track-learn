@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Public Routes
-Route::get('/', [DashboardController::class, 'welcome'])->name('welcome');
+Route::get('/', [DashboardController::class, 'home'])->name('home');
 
 // Guest Routes (Only accessible when not logged in)
 Route::middleware('guest')->group(function () {

@@ -43,10 +43,10 @@
                         <i class="fas fa-plus-circle mr-3"></i>
                         Buat Kursus
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                    {{-- <a href="#" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-file-alt mr-3"></i>
                         Materi
-                    </a>
+                    </a> --}}
                     <a href="#" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-question-circle mr-3"></i>
                         Kuis
@@ -89,10 +89,10 @@
                         <p class="text-gray-600">Kelola kursus dan pantau progres siswa Anda</p>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+                        {{-- <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
                             <i class="fas fa-bell text-xl"></i>
                             <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
+                        </button> --}}
                         <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                             <i class="fas fa-plus mr-2"></i>Buat Kursus
                         </a>
