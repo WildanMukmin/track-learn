@@ -35,11 +35,12 @@
                         <i class="fas fa-home mr-3"></i>
                         Dashboard
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                    <a href="{{ route('teacher.courses') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-book mr-3"></i>
                         Kursus Saya
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+
+                    <a href="{{ route('teacher.courses.create') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-plus-circle mr-3"></i>
                         Buat Kursus
                     </a>
@@ -93,7 +94,7 @@
                             <i class="fas fa-bell text-xl"></i>
                             <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                         </button> --}}
-                        <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                        <a href="{{ route('teacher.courses.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                             <i class="fas fa-plus mr-2"></i>Buat Kursus
                         </a>
                     </div>

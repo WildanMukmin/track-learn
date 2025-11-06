@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Teacher\CourseController as TeacherCourseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,6 +57,11 @@ Route::middleware('auth')->group(function () {
     // Teacher Routes
     Route::middleware('role:teacher')->prefix('teacher')->name('teacher.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'teacherDashboard'])->name('dashboard');
+        Route::get('/courses', [TeacherCourseController::class, 'index'])->name('courses');
+        Route::get('/courses/create', [TeacherCourseController::class, 'create'])->name('courses.create');
+        Route::post('/courses/store', [TeacherCourseController::class, 'store'])->name('courses.store');
+
+
         
         // Add more teacher routes here
         // Route::resource('courses', TeacherCourseController::class);
