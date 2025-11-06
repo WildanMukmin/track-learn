@@ -61,6 +61,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/courses/create', [TeacherCourseController::class, 'create'])->name('courses.create');
         Route::post('/courses/store', [TeacherCourseController::class, 'store'])->name('courses.store');
 
+        // EDIT / UPDATE
+    Route::get('/courses/{course}/edit', [TeacherCourseController::class, 'edit'])->name('courses.edit');
+    Route::put('/courses/{course}', [TeacherCourseController::class, 'update'])->name('courses.update');
+
 
         
         // Add more teacher routes here

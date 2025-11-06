@@ -152,7 +152,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xl font-bold text-gray-800">Kursus Saya</h3>
-                        <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-semibold">Lihat Semua</a>
+                        <a href="{{ route('teacher.courses') }}" class="text-blue-600 hover:text-blue-700 text-sm font-semibold">Lihat Semua</a>
                     </div>
 
                     @if($courses->count() > 0)
@@ -178,7 +178,7 @@
                                     </div>
 
                                     <div class="flex space-x-2">
-                                        <a href="#"
+                                        <a href="{{ route('teacher.courses.edit', $course->id) }}"
                                             class="flex-1 px-4 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition text-sm">
                                             <i class="fas fa-edit mr-1"></i>Edit
                                         </a>
