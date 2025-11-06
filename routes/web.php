@@ -3,7 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasswordResetController;
-use App\Http\Controllers\CourseController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,9 +46,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
         
-        // Add more admin routes here
-        // Route::resource('users', UserController::class);
-        // Route::resource('courses', AdminCourseController::class);
+        // User Management
+        Route::resource('users', AdminUserController::class)->except(['show', 'create']);
+        
+        // Course Management
+        Route::resource('courses', AdminCourseController::class);
     });
 
     // Teacher Routes
@@ -63,8 +66,7 @@ Route::middleware('auth')->group(function () {
     // Student Routes
     Route::middleware('role:student')->prefix('student')->name('student.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
-        Route::get('/cari-kursus', [CourseController::class, 'search'])->name('courses.search');
-
+        
         // Add more student routes here
         // Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
         // Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'store'])->name('courses.enroll');

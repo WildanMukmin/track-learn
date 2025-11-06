@@ -36,22 +36,16 @@
                         <i class="fas fa-home mr-3"></i>
                         Dashboard
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 hover:bg-purple-700 rounded-lg transition">
+                    <a href="{{ route('admin.users.index') }}"
+                        class="flex items-center px-4 py-3 hover:bg-purple-700 rounded-lg transition">
                         <i class="fas fa-users mr-3"></i>
                         Kelola Pengguna
                     </a>
-                    <a href="#" class="flex items-center px-4 py-3 hover:bg-purple-700 rounded-lg transition">
+                    <a href="{{ route('admin.courses.index') }}"
+                        class="flex items-center px-4 py-3 hover:bg-purple-700 rounded-lg transition">
                         <i class="fas fa-book mr-3"></i>
                         Kelola Kursus
                     </a>
-                    {{-- <a href="#" class="flex items-center px-4 py-3 hover:bg-purple-700 rounded-lg transition">
-                        <i class="fas fa-chart-bar mr-3"></i>
-                        Laporan
-                    </a> --}}
-                    {{-- <a href="#" class="flex items-center px-4 py-3 hover:bg-purple-700 rounded-lg transition">
-                        <i class="fas fa-cog mr-3"></i>
-                        Pengaturan
-                    </a> --}}
                 </nav>
             </div>
 
@@ -185,10 +179,10 @@
                                         </div>
                                     </div>
                                     <span class="px-3 py-1 rounded-full text-xs font-semibold
-                                                    @if($user->role == 'admin') bg-red-100 text-red-600
-                                                    @elseif($user->role == 'teacher') bg-blue-100 text-blue-600
-                                                    @else bg-green-100 text-green-600
-                                                    @endif">
+                                                            @if($user->role == 'admin') bg-red-100 text-red-600
+                                                            @elseif($user->role == 'teacher') bg-blue-100 text-blue-600
+                                                            @else bg-green-100 text-green-600
+                                                            @endif">
                                         {{ ucfirst($user->role) }}
                                     </span>
                                 </div>
