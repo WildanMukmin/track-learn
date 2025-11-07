@@ -6,6 +6,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Teacher\CourseController as TeacherCourseController;
+use App\Http\Controllers\Student\CourseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,6 +77,7 @@ Route::middleware('auth')->group(function () {
     // Student Routes
     Route::middleware('role:student')->prefix('student')->name('student.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
+        Route::get('/cari-kursus', [CourseController::class, 'search'])->name('courses.search');
         
         // Add more student routes here
         // Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
