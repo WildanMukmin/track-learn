@@ -1,13 +1,20 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasswordResetController;
+
+// Admin Controllers
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
+
+// Teacher Controllers
 use App\Http\Controllers\Teacher\CourseController as TeacherCourseController;
-use App\Http\Controllers\Student\CourseController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Teacher\SiswaController as TeacherSiswaController;
+
+// Student Controllers
+use App\Http\Controllers\Student\CourseController as StudentCourseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,20 +22,20 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Public Routes
+// 🌐 Public Routes
 Route::get('/', [DashboardController::class, 'home'])->name('home');
 
-// Guest Routes (Only accessible when not logged in)
+// 👤 Guest Routes (Only accessible when not logged in)
 Route::middleware('guest')->group(function () {
-    // Login Routes
+    // Login
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
 
-    // Register Routes
+    // Register
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 
-    // Password Reset Routes
+    // Password Reset
     Route::get('/forgot-password', [PasswordResetController::class, 'showForgotPasswordForm'])
         ->name('password.request');
     Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])
@@ -39,51 +46,48 @@ Route::middleware('guest')->group(function () {
         ->name('password.update');
 });
 
-// Authenticated Routes
+// 🔒 Authenticated Routes
 Route::middleware('auth')->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Admin Routes
+    // 🧑‍💼 Admin Routes
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
-        
+
         // User Management
         Route::resource('users', AdminUserController::class)->except(['show', 'create']);
-        
+
         // Course Management
         Route::resource('courses', AdminCourseController::class);
     });
 
-    // Teacher Routes
+    // 👨‍🏫 Teacher Routes
     Route::middleware('role:teacher')->prefix('teacher')->name('teacher.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'teacherDashboard'])->name('dashboard');
+        
+        // Course Management
         Route::get('/courses', [TeacherCourseController::class, 'index'])->name('courses');
         Route::get('/courses/create', [TeacherCourseController::class, 'create'])->name('courses.create');
         Route::post('/courses/store', [TeacherCourseController::class, 'store'])->name('courses.store');
+        Route::get('/courses/{course}/edit', [TeacherCourseController::class, 'edit'])->name('courses.edit');
+        Route::put('/courses/{course}', [TeacherCourseController::class, 'update'])->name('courses.update');
 
-        // EDIT / UPDATE
-    Route::get('/courses/{course}/edit', [TeacherCourseController::class, 'edit'])->name('courses.edit');
-    Route::put('/courses/{course}', [TeacherCourseController::class, 'update'])->name('courses.update');
-
-
-        
-        // Add more teacher routes here
-        // Route::resource('courses', TeacherCourseController::class);
-        // Route::resource('courses.materials', MaterialController::class);
-        // Route::resource('courses.quizzes', QuizController::class);
+        // ✅ Kelola siswa dengan nama route yang konsisten
+        Route::get('/siswa', [TeacherSiswaController::class, 'index'])->name('siswa.index');
+        Route::get('/siswa/{id}', [TeacherSiswaController::class, 'show'])->name('siswa.show');
     });
 
-    // Student Routes
+    // 👨‍🎓 Student Routes
     Route::middleware('role:student')->prefix('student')->name('student.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
-        Route::get('/cari-kursus', [CourseController::class, 'search'])->name('courses.search');
-        
-        // Add more student routes here
-        // Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
+        Route::get('/cari-kursus', [StudentCourseController::class, 'search'])->name('courses.search');
+
+        // Tambahan route student bisa didefinisikan di sini
+        // Route::get('/courses', [StudentCourseController::class, 'index'])->name('courses.index');
         // Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'store'])->name('courses.enroll');
         // Route::get('/my-courses', [EnrollmentController::class, 'myCourses'])->name('my-courses');
-        // Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
+        // Route::get('/courses/{course}', [StudentCourseController::class, 'show'])->name('courses.show');
         // Route::post('/quizzes/{quiz}/submit', [QuizSubmissionController::class, 'store'])->name('quizzes.submit');
     });
 });
