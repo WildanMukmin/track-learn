@@ -48,13 +48,14 @@
                         <i class="fas fa-file-alt mr-3"></i>
                         Materi
                     </a> --}}
-                    <a href="#" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                    <a href="{{ route('teacher.quizzes.index') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-question-circle mr-3"></i>
                         Kuis
                     </a>
-                   <a href="{{ route('teacher.siswa.index') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
-                    <i class="fas fa-users mr-3"></i>
-                      Siswa
+
+                    <a href="{{ route('teacher.students.index') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                        <i class="fas fa-users mr-3"></i>
+                        Siswa
                     </a>
 
                 </nav>

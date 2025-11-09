@@ -74,9 +74,32 @@ Route::middleware('auth')->group(function () {
         Route::get('/courses/{course}/edit', [TeacherCourseController::class, 'edit'])->name('courses.edit');
         Route::put('/courses/{course}', [TeacherCourseController::class, 'update'])->name('courses.update');
 
-        // ✅ Kelola siswa dengan nama route yang konsisten
-        Route::get('/siswa', [TeacherSiswaController::class, 'index'])->name('siswa.index');
-        Route::get('/siswa/{id}', [TeacherSiswaController::class, 'show'])->name('siswa.show');
+        // EDIT / UPDATE
+        Route::get('/courses/{course}/edit', [TeacherCourseController::class, 'edit'])->name('courses.edit');
+        Route::put('/courses/{course}', [TeacherCourseController::class, 'update'])->name('courses.update');
+
+        Route::prefix('quizzes')->name('quizzes.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Teacher\QuizController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Teacher\QuizController::class, 'create'])->name('create');
+        Route::post('/store', [App\Http\Controllers\Teacher\QuizController::class, 'store'])->name('store');
+        Route::get('/{id}', [App\Http\Controllers\Teacher\QuizController::class, 'show'])->name('show');
+        Route::delete('/{id}', [App\Http\Controllers\Teacher\QuizController::class, 'destroy'])->name('destroy');
+        });
+
+        // =================== ROUTE SISWA ===================
+        Route::prefix('students')->name('students.')->group(function () {
+            Route::get('/', [App\Http\Controllers\Teacher\StudentController::class, 'index'])->name('index');
+            Route::get('/{id}', [App\Http\Controllers\Teacher\StudentController::class, 'show'])->name('show');
+            Route::delete('/{id}', [App\Http\Controllers\Teacher\StudentController::class, 'destroy'])->name('destroy');
+        });
+
+
+
+        
+        // Add more teacher routes here
+        // Route::resource('courses', TeacherCourseController::class);
+        // Route::resource('courses.materials', MaterialController::class);
+        // Route::resource('courses.quizzes', QuizController::class);
     });
 
     // 👨‍🎓 Student Routes
