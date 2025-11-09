@@ -17,7 +17,7 @@
         <input
             type="text"
             name="q"
-            placeholder="Cari nama kursus..."
+            placeholder="Cari nama kursus atau kategori"
             value="{{ request('q') }}"
             class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
         >
@@ -27,6 +27,18 @@
     </form>
 
 </div>
+
+@if(session('success'))
+    <div class="bg-green-100 text-green-800 px-4 py-3 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('info'))
+    <div class="bg-blue-100 text-blue-800 px-4 py-3 rounded mb-4">
+        {{ session('info') }}
+    </div>
+@endif
 
 @if($courses->count())
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -55,10 +67,14 @@
                     <p class="text-sm text-gray-600">Instructor</p>
                     <p class="font-semibold text-gray-800 mb-3">{{ $course->teacher->name ?? '-' }}</p>
 
-                    <a href="#"
-                       class="block text-center bg-blue-600 text-white py-2 rounded hover:bg-blue-700 text-sm font-semibold">
-                        Enroll Now
-                    </a>
+                    <form action="{{ route('student.courses.enroll', $course->id) }}" method="POST">
+                        @csrf
+                        <button type="submit"
+                            class="block w-full text-center bg-blue-600 text-white py-2 rounded hover:bg-blue-700 text-sm font-semibold">
+                            Enroll Now
+                        </button>
+                    </form>
+
                 </div>
             </div>
         @endforeach
