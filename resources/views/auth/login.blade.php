@@ -7,17 +7,12 @@
     <title>Login - TrackLearn</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-    </style>
 </head>
 
 <body class="bg-gray-50">
-    <div class="min-h-screen flex">
+    <div class="min-h-screen flex flex-col lg:flex-row">
         <!-- Left Side - Form -->
-        <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
+        <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 bg-white shadow-md">
             <div class="w-full max-w-md">
                 <!-- Logo -->
                 <div class="text-center mb-8">
@@ -59,9 +54,7 @@
 
                     <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Email
-                        </label>
+                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-envelope text-gray-400"></i>
@@ -77,9 +70,7 @@
 
                     <!-- Password -->
                     <div>
-                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Password
-                        </label>
+                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-gray-400"></i>
@@ -102,14 +93,10 @@
                         <div class="flex items-center">
                             <input type="checkbox" name="remember" id="remember"
                                 class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
-                            <label for="remember" class="ml-2 block text-sm text-gray-700">
-                                Ingat saya
-                            </label>
+                            <label for="remember" class="ml-2 block text-sm text-gray-700">Ingat saya</label>
                         </div>
                         <a href="{{ route('password.request') }}"
-                            class="text-sm text-purple-600 hover:text-purple-700 font-semibold">
-                            Lupa password?
-                        </a>
+                            class="text-sm text-purple-600 hover:text-purple-700 font-semibold">Lupa password?</a>
                     </div>
 
                     <!-- Submit Button -->
@@ -125,7 +112,7 @@
                         <div class="w-full border-t border-gray-300"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-4 bg-gray-50 text-gray-500">atau</span>
+                        <span class="px-4 bg-white text-gray-500">atau</span>
                     </div>
                 </div>
 
@@ -148,23 +135,30 @@
             </div>
         </div>
 
-        <!-- Right Side - Image/Info (Hidden on mobile) -->
-        <div class="hidden lg:flex lg:w-1/2 gradient-bg items-center justify-center p-12">
-            <div class="text-white text-center">
-                <i class="fas fa-chart-line text-8xl mb-8"></i>
-                <h2 class="text-4xl font-bold mb-4">Selamat Datang Kembali!</h2>
-                <p class="text-xl text-gray-100 mb-8">Lanjutkan perjalanan belajar Anda dengan TrackLearn</p>
-                <div class="space-y-4">
+        <!-- Right Side - Image Section -->
+        <div class="hidden lg:flex lg:w-1/2 relative items-center justify-center bg-cover bg-center"
+            style="background-image: url('https://images.pexels.com/photos/4778664/pexels-photo-4778664.jpeg');">
+
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black/50"></div>
+
+            <!-- Content -->
+            <div class="relative z-10 text-center text-white px-12">
+                <i class="fas fa-chart-line text-7xl mb-6"></i>
+                <h2 class="text-4xl font-bold mb-3">Selamat Datang Kembali!</h2>
+                <p class="text-lg text-gray-200 mb-8">Lanjutkan perjalanan belajar Anda dengan TrackLearn</p>
+
+                <div class="space-y-3">
                     <div class="flex items-center justify-center space-x-3">
-                        <i class="fas fa-check-circle text-2xl"></i>
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
                         <span class="text-lg">Tracking Progress Real-Time</span>
                     </div>
                     <div class="flex items-center justify-center space-x-3">
-                        <i class="fas fa-check-circle text-2xl"></i>
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
                         <span class="text-lg">Sertifikat Otomatis</span>
                     </div>
                     <div class="flex items-center justify-center space-x-3">
-                        <i class="fas fa-check-circle text-2xl"></i>
+                        <i class="fas fa-check-circle text-2xl text-green-400"></i>
                         <span class="text-lg">Kuis Interaktif</span>
                     </div>
                 </div>
@@ -179,12 +173,10 @@
 
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
+                toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
                 passwordInput.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
+                toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }
     </script>
