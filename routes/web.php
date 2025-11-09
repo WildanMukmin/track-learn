@@ -15,6 +15,7 @@ use App\Http\Controllers\Teacher\SiswaController as TeacherSiswaController;
 
 // Student Controllers
 use App\Http\Controllers\Student\CourseController as StudentCourseController;
+use App\Http\Controllers\Student\EnrollmentController as StudentEnrollmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,11 +83,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:student')->prefix('student')->name('student.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'studentDashboard'])->name('dashboard');
         Route::get('/cari-kursus', [StudentCourseController::class, 'search'])->name('courses.search');
+        Route::get('/my-courses', [StudentEnrollmentController::class, 'myCourses'])->name('my-courses');
+        Route::post('/courses/{course}/enroll', [StudentEnrollmentController::class, 'store'])->name('courses.enroll');
 
         // Tambahan route student bisa didefinisikan di sini
         // Route::get('/courses', [StudentCourseController::class, 'index'])->name('courses.index');
-        // Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'store'])->name('courses.enroll');
-        // Route::get('/my-courses', [EnrollmentController::class, 'myCourses'])->name('my-courses');
+
         // Route::get('/courses/{course}', [StudentCourseController::class, 'show'])->name('courses.show');
         // Route::post('/quizzes/{quiz}/submit', [QuizSubmissionController::class, 'store'])->name('quizzes.submit');
     });

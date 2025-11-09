@@ -10,8 +10,8 @@
                class="flex items-center px-4 py-3 rounded-lg {{ Route::is('student.dashboard') ? 'bg-green-900' : 'hover:bg-green-700 transition' }}">
                 <i class="fas fa-home mr-3"></i> Dashboard
             </a>
-            <a href="#"
-               class="flex items-center px-4 py-3 rounded-lg hover:bg-green-700 transition">
+            <a href="{{ route('student.my-courses') }}"
+               class="flex items-center px-4 py-3 rounded-lg {{ Route::is('student.my-courses') ? 'bg-green-900' : 'hover:bg-green-700 transition' }}">
                 <i class="fas fa-book-open mr-3"></i> Kursus Saya
             </a>
             <a href="{{ route('student.courses.search') }}"
