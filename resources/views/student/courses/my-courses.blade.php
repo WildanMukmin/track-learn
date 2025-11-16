@@ -60,9 +60,9 @@
                         </p>
 
                         <div class="flex justify-between items-center">
-                            <a href="#"
-                               class="text-sm font-semibold text-blue-600 hover:text-blue-800">
-                                Lihat Detail
+                            <a href="{{ route('student.courses.show', $enrollment->course->id) }}"
+                                class="text-sm font-semibold text-blue-600 hover:text-blue-800">
+                                    Lihat Detail
                             </a>
                             <span class="text-xs text-gray-400">
                                 {{ $enrollment->created_at->format('d M Y') }}

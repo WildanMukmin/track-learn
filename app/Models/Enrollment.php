@@ -24,4 +24,14 @@ class Enrollment extends Model
     {
         return $this->belongsTo(User::class, 'student_id');
     }
+
+    public function materialProgress()
+    {
+        return $this->hasMany(MaterialProgress::class);
+    }
+
+    public function quizAttempts()
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
 }
