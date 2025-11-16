@@ -28,13 +28,13 @@ class EnrollmentController extends Controller
 
         // Kalau belum pernah enroll
         if ($enrollments->isEmpty()) {
-            return view('student.my-courses', [
+            return view('student.courses.my-courses', [
                 'enrollments' => $enrollments,
                 'message' => 'Kamu belum mendaftar kursus apapun.',
             ]);
         }
 
-        return view('student.my-courses', compact('enrollments'));
+        return view('student.courses.my-courses', compact('enrollments'));
         
     }
     public function store($courseId)

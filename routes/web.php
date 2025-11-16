@@ -108,11 +108,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/cari-kursus', [StudentCourseController::class, 'search'])->name('courses.search');
         Route::get('/my-courses', [StudentEnrollmentController::class, 'myCourses'])->name('my-courses');
         Route::post('/courses/{course}/enroll', [StudentEnrollmentController::class, 'store'])->name('courses.enroll');
-
+        Route::get('/courses/{course}', [StudentCourseController::class, 'show'])->name('courses.show');
+        
         // Tambahan route student bisa didefinisikan di sini
         // Route::get('/courses', [StudentCourseController::class, 'index'])->name('courses.index');
-
-        // Route::get('/courses/{course}', [StudentCourseController::class, 'show'])->name('courses.show');
         // Route::post('/quizzes/{quiz}/submit', [QuizSubmissionController::class, 'store'])->name('quizzes.submit');
     });
 });
