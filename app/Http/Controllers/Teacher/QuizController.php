@@ -11,9 +11,13 @@ class QuizController extends Controller
 {
     public function index()
     {
-        $quizzes = Quiz::with('course')->get();
-        return view('teacher.quizzes.index', compact('quizzes'));
+    $quizzes = Quiz::with('course')
+        ->withCount('questions')  // ← Tambahkan ini
+        ->get();
+
+    return view('teacher.quizzes.index', compact('quizzes'));
     }
+
 
     public function create()
     {
@@ -21,21 +25,39 @@ class QuizController extends Controller
         return view('teacher.quizzes.create', compact('courses'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'course_id' => 'required|exists:courses,id',
-            'title' => 'required|string|max:255',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'course_id' => 'required|exists:courses,id',
+        'title' => 'required|string|max:255',
+    ]);
 
-        Quiz::create([
-            'course_id' => $request->course_id,
-            'title' => $request->title,
-        ]);
+    // Tambahkan variabel $quiz
+    $quiz = Quiz::create([
+        'course_id' => $request->course_id,
+        'title' => $request->title,
+    ]);
 
-        return redirect()->route('teacher.quizzes.index')->with('success', 'Kuis berhasil dibuat!');
+    // ================================
+    // Tambahan untuk menyimpan questions
+    // ================================
+    if ($request->has('questions') && is_array($request->questions)) {
+        foreach ($request->questions as $q) {
+            \App\Models\Question::create([
+                'quiz_id' => $quiz->id,
+                'question_text' => $q['question_text'] ?? null,  // <-- penting
+                'option_a' => $q['option_a'] ?? null,
+                'option_b' => $q['option_b'] ?? null,
+                'option_c' => $q['option_c'] ?? null,
+                'option_d' => $q['option_d'] ?? null,
+                'correct_answer' => $q['correct_answer'] ?? null,
+            ]);
+        }
     }
+    // ================================
 
+    return redirect()->route('teacher.quizzes.index')->with('success', 'Kuis berhasil dibuat!');
+}
     public function show($id)
     {
         $quiz = Quiz::with('course')->findOrFail($id);
@@ -47,4 +69,25 @@ class QuizController extends Controller
         Quiz::findOrFail($id)->delete();
         return redirect()->route('teacher.quizzes.index')->with('success', 'Kuis berhasil dihapus!');
     }
+
+    public function edit($id)
+{
+    $quiz = Quiz::with('questions')->findOrFail($id);
+    $courses = \App\Models\Course::all(); // atau filter khusus guru
+
+    return view('teacher.quizzes.edit', compact('quiz', 'courses'));
+}
+
+
+
+    public function update(Request $request, $id)
+    {
+    $quiz = Quiz::findOrFail($id);
+
+    $quiz->title = $request->title;
+    $quiz->save();
+
+    return redirect()->route('teacher.quizzes.index')->with('success', 'Quiz berhasil diperbarui.');
+    }
+
 }

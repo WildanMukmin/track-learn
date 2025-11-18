@@ -44,7 +44,7 @@
                     </div>
 
                     <label class="block font-medium mb-1">Teks Pertanyaan</label>
-                    <input type="text" name="questions[0][text]" class="w-full border rounded-lg p-2 mb-3" placeholder="Tulis pertanyaan..." required>
+                    <input type="text" name="questions[0][question_text]" class="w-full border rounded-lg p-2 mb-3" placeholder="Tulis pertanyaan..." required>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -88,7 +88,7 @@
     </form>
 </div>
 
-{{-- ========== Script Tambah / Hapus Pertanyaan + Scroll ========== --}}
+{{-- ========== Script Tambah / Hapus Pertanyaan ========== --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let questionIndex = 1;
@@ -104,7 +104,7 @@
                     </div>
 
                     <label class="block font-medium mb-1">Teks Pertanyaan</label>
-                    <input type="text" name="questions[${questionIndex}][text]" class="w-full border rounded-lg p-2 mb-3" placeholder="Tulis pertanyaan..." required>
+                    <input type="text" name="questions[${questionIndex}][question_text]" class="w-full border rounded-lg p-2 mb-3" placeholder="Tulis pertanyaan..." required>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -139,10 +139,6 @@
             `;
 
             container.insertAdjacentHTML('beforeend', questionTemplate);
-
-            // Scroll ke pertanyaan baru dengan efek halus
-            const newQuestion = container.lastElementChild;
-            newQuestion.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
             questionIndex++;
         });

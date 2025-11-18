@@ -1,0 +1,94 @@
+@extends('teacher.layouts.teacher')
+
+@section('title', 'Tambah Materi')
+
+@section('content')
+<div class="flex h-full w-full overflow-hidden">
+
+    <!-- Sidebar tetap pakai dari layout -->
+    <!-- Main Content -->
+    <main class="flex-1 bg-gray-50 flex flex-col h-full overflow-hidden">
+
+        <!-- Header -->
+        <header class="bg-white shadow-md flex-shrink-0">
+            <div class="px-8 py-4 flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">Tambah Materi</h1>
+                    <p class="text-gray-600">Buat materi baru untuk kursus Anda</p>
+                </div>
+                <div>
+                    <a href="{{ route('teacher.materials.index') }}"
+                       class="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-all shadow-md">
+                        <i class="fas fa-arrow-left mr-2"></i> Kembali
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Form -->
+        <div class="flex-1 overflow-y-auto p-8">
+            @if ($errors->any())
+                <div class="mb-6 text-red-700 bg-red-100 border-l-4 border-red-500 p-4 rounded-lg shadow-sm">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <form action="{{ route('teacher.materials.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <!-- Judul Materi -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" for="title">Judul Materi</label>
+                        <input type="text" id="title" name="title" 
+                               class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               value="{{ old('title') }}" required>
+                    </div>
+
+                    <!-- Kursus / Course -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" for="course_id">Kursus</label>
+                        <select id="course_id" name="course_id" 
+                                class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Pilih kursus</option>
+                           @foreach(Auth::user()->coursesTeaching ?? [] as $course)
+                            <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
+                            {{ $course->title }}
+                            </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <!-- Konten Materi -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" for="content">Konten Materi</label>
+                        <textarea id="content" name="content" rows="6"
+                                  class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('content') }}</textarea>
+                    </div>
+
+                    <!-- File Materi -->
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" for="file_path">Upload File Materi (Opsional)</label>
+                        <input type="file" id="file_path" name="file_path" 
+                               class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <!-- Submit -->
+                    <div>
+                        <button type="submit"
+                                class="px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-all shadow-md">
+                            <i class="fas fa-plus mr-2"></i> Tambah Materi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </main>
+</div>
+@endsection

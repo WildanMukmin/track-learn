@@ -12,6 +12,11 @@ use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 // Teacher Controllers
 use App\Http\Controllers\Teacher\CourseController as TeacherCourseController;
 use App\Http\Controllers\Teacher\SiswaController as TeacherSiswaController;
+use App\Http\Controllers\Teacher\QuizController as TeacherQuizController;
+use App\Http\Controllers\Teacher\MaterialController as TeacherMaterialController;
+
+
+
 
 // Student Controllers
 use App\Http\Controllers\Student\CourseController as StudentCourseController;
@@ -66,7 +71,17 @@ Route::middleware('auth')->group(function () {
     // 👨‍🏫 Teacher Routes
     Route::middleware('role:teacher')->prefix('teacher')->name('teacher.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'teacherDashboard'])->name('dashboard');
-        
+
+    Route::prefix('materials')->name('materials.')->group(function () {
+        Route::get('/', [TeacherMaterialController::class, 'index'])->name('index');
+        Route::get('/create', [TeacherMaterialController::class, 'create'])->name('create');
+        Route::post('/', [TeacherMaterialController::class, 'store'])->name('store');       
+        Route::get('/{id}', [TeacherMaterialController::class, 'show'])->name('show');
+
+        Route::get('/{id}/edit', [TeacherMaterialController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TeacherMaterialController::class, 'update'])->name('update');
+        });
+
         // Course Management
         Route::get('/courses', [TeacherCourseController::class, 'index'])->name('courses');
         Route::get('/courses/create', [TeacherCourseController::class, 'create'])->name('courses.create');
@@ -77,13 +92,20 @@ Route::middleware('auth')->group(function () {
         // EDIT / UPDATE
         Route::get('/courses/{course}/edit', [TeacherCourseController::class, 'edit'])->name('courses.edit');
         Route::put('/courses/{course}', [TeacherCourseController::class, 'update'])->name('courses.update');
-
+        
+        
         Route::prefix('quizzes')->name('quizzes.')->group(function () {
         Route::get('/', [App\Http\Controllers\Teacher\QuizController::class, 'index'])->name('index');
         Route::get('/create', [App\Http\Controllers\Teacher\QuizController::class, 'create'])->name('create');
         Route::post('/store', [App\Http\Controllers\Teacher\QuizController::class, 'store'])->name('store');
         Route::get('/{id}', [App\Http\Controllers\Teacher\QuizController::class, 'show'])->name('show');
         Route::delete('/{id}', [App\Http\Controllers\Teacher\QuizController::class, 'destroy'])->name('destroy');
+        
+        // Edit / UPDATE
+        Route::get('/{id}/edit', [TeacherQuizController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TeacherQuizController::class, 'update'])->name('update');
+
+
         });
 
         // =================== ROUTE SISWA ===================

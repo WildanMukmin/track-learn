@@ -30,7 +30,8 @@
                 @foreach($quiz->questions as $index => $question)
                 <div class="border border-gray-200 rounded-lg p-4">
                     <h3 class="font-medium text-gray-800">
-                        {{ $index + 1 }}. {{ $question->text }}
+                        {{ $index + 1 }}. {{ $question->question_text }}
+
                     </h3>
                     <ul class="mt-2 list-disc list-inside text-gray-700">
                         <li>A. {{ $question->option_a }}</li>
