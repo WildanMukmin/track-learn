@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MaterialProgress extends Model
 {
-    protected $fillable = ['enrollment_id', 'material_id', 'is_completed'];
+    protected $fillable = ['enrollment_id', 'material_id', 'user_id', 'is_completed'];
 
     public function enrollment()
     {

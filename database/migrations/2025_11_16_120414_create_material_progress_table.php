@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('enrollment_id')->constrained('enrollments')->onDelete('cascade');
             $table->foreignId('material_id')->constrained('materials')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->boolean('is_completed')->default(false);
             $table->timestamps();
         });
