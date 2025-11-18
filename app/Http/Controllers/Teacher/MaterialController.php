@@ -48,7 +48,7 @@ class MaterialController extends Controller
         $material->course_id = $request->course_id;
 
         if($request->hasFile('file_path')){
-            $material->file_path = $request->file('file_path')->store('materials');
+            $material->file_path = $request->file('file_path')->store('materials', 'public');
         }
 
         $material->save();
@@ -82,7 +82,7 @@ public function update(Request $request, $id)
     $material->course_id = $request->course_id;
 
     if($request->hasFile('file_path')){
-        $material->file_path = $request->file('file_path')->store('materials');
+        $material->file_path = $request->file('file_path')->store('materials', 'public');
     }
 
     $material->save();

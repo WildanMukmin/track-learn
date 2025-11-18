@@ -83,6 +83,12 @@ class User extends Authenticatable
         return $this->hasMany(Enrollment::class, 'student_id');
     }
 
+    public function materialProgress()
+    {
+        return $this->hasMany(MaterialProgress::class);
+    }
+
+
     /**
      * Get quiz submissions
      */
