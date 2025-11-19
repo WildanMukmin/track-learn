@@ -112,13 +112,13 @@
                                    class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition shadow">
                                     <i class="fas fa-edit mr-1"></i> Edit
                                 </a>
-                                <a href="#"
+                                <a href="{{ route('teacher.courses.show', $course->id) }}"
                                    class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition shadow">
                                     <i class="fas fa-eye mr-1"></i> Lihat
                                 </a>
                             </div>
                             <div class="mt-4 text-sm text-gray-500">
-                                <i class="fas fa-users mr-1"></i> 25 Siswa Terdaftar
+                                <i class="fas fa-users mr-1"></i> {{ $course->students_count }} Siswa Terdaftar
                             </div>
                         </div>
                     @endforeach
