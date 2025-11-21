@@ -13,6 +13,9 @@ class Course extends Model
         'title',
         'description',
         'teacher_id',
+        'category',
+        'difficulty',
+        'duration',
     ];
 
     public function teacher()

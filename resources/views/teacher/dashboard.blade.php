@@ -184,10 +184,17 @@
                                             class="flex-1 px-4 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition text-sm">
                                             <i class="fas fa-edit mr-1"></i>Edit
                                         </a>
-                                        <a href="#"
-                                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">
+                                        <a href="{{ route('teacher.courses.show', $course->id) }}"
+                                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm flex items-center justify-center">
                                             <i class="fas fa-eye"></i>
                                         </a>
+                                        <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kursus ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm flex items-center justify-center">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             @endforeach
@@ -256,7 +263,7 @@
                                                 {{ $enrollment->created_at->diffForHumans() }}
                                             </td>
                                             <td class="py-3 px-4 text-center">
-                                                <a href="#" class="text-blue-600 hover:text-blue-700">
+                                                <a href="{{ route('teacher.courses.show', $enrollment->course->id) }}" class="text-blue-600 hover:text-blue-700">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             </td>

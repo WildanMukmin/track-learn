@@ -82,6 +82,8 @@ Route::middleware('auth')->group(function () {
         // EDIT HARUS SETELAH ROUTE SHOW
         Route::get('/courses/{course}/edit', [TeacherCourseController::class, 'edit'])->name('courses.edit');
         Route::put('/courses/{course}', [TeacherCourseController::class, 'update'])->name('courses.update');
+        // DELETE KURSUS
+        Route::delete('/courses/{course}', [TeacherCourseController::class, 'destroy'])->name('courses.destroy');
 
         // === QUIZZES ===
         Route::prefix('quizzes')->name('quizzes.')->group(function () {
