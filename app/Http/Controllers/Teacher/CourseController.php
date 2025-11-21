@@ -9,6 +9,15 @@ use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
 {
+    public function destroy(Course $course)
+    {
+        // Pastikan hanya guru pemilik yang bisa menghapus kursus
+        if ($course->teacher_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus kursus ini.');
+        }
+        $course->delete();
+        return redirect()->route('teacher.courses')->with('success', 'Kursus berhasil dihapus.');
+    }
     public function index()
     {
         $teacherId = Auth::id();
@@ -37,6 +46,9 @@ class CourseController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'teacher_id' => Auth::id(),
+            'category' => $request->category,
+            'difficulty' => $request->difficulty,
+            'duration' => $request->duration,
         ]);
 
         return redirect()->route('teacher.courses')->with('success', 'Kursus berhasil dibuat.');
@@ -65,7 +77,7 @@ class CourseController extends Controller
             'description' => 'required',
         ]);
 
-        $course->update($request->only(['title', 'description']));
+        $course->update($request->only(['title', 'description', 'category', 'difficulty', 'duration']));
 
         return redirect()->route('teacher.courses')->with('success', 'Kursus berhasil diperbarui.');
     }

@@ -45,6 +45,17 @@ class DashboardController extends Controller
 
         $teacherId = Auth::id();
 
+        // Hitung tingkat kelulusan rata-rata kelas
+        $totalEnrollments = Enrollment::whereHas('course', function($query) use ($teacherId) {
+            $query->where('teacher_id', $teacherId);
+        })->count();
+
+        $totalPassed = Enrollment::whereHas('course', function($query) use ($teacherId) {
+            $query->where('teacher_id', $teacherId);
+        })->whereIn('status', ['passed', 'certificate_issued'])->count();
+
+        $completionRate = $totalEnrollments > 0 ? round(($totalPassed / $totalEnrollments) * 100) : 0;
+
         $data = [
             'totalCourses' => Course::where('teacher_id', $teacherId)->count(),
             'totalStudents' => Enrollment::whereHas('course', function($query) use ($teacherId) {
@@ -61,6 +72,7 @@ class DashboardController extends Controller
                 ->latest()
                 ->take(10)
                 ->get(),
+            'completionRate' => $completionRate,
         ];
 
         return view('teacher.dashboard', $data);
