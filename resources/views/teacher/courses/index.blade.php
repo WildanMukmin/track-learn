@@ -98,42 +98,43 @@
             @if($courses->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($courses as $course)
-                        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
-                            <div class="flex items-center mb-4">
-                                    @if($course->thumbnail)
-                                        <div class="w-24 h-24 rounded-lg overflow-hidden mr-4 shadow-lg transform transition-transform duration-200 hover:scale-105">
-                                            <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="thumbnail" class="w-full h-full object-cover">
-                                        </div>
-                                    @else
-                                        <div class="w-16 h-16 bg-blue-700 rounded-lg flex items-center justify-center mr-4 shadow">
-                                            <i class="fas fa-book text-white text-2xl"></i>
-                                        </div>
-                                    @endif
-                                    <div class="flex-1">
-                                        <h3 class="text-lg font-bold text-gray-800">{{ $course->title }}</h3>
-                                    </div>
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+                            <!-- Banner thumbnail besar -->
+                            @if($course->thumbnail)
+                                <div class="w-full h-40 bg-gray-200 overflow-hidden">
+                                    <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="thumbnail" class="w-full h-full object-cover">
                                 </div>
-                            <p class="text-gray-600 mb-4">{{ Str::limit($course->description, 100) }}</p>
+                            @else
+                                <div class="w-full h-40 bg-blue-700 flex items-center justify-center">
+                                    <i class="fas fa-book text-white text-4xl"></i>
+                                </div>
+                            @endif
 
-                            <div class="flex justify-between items-center gap-2">
-                                <a href="{{ route('teacher.courses.edit', $course->id) }}"
-                                   class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition shadow">
-                                    <i class="fas fa-edit mr-1"></i> Edit
-                                </a>
-                                <a href="{{ route('teacher.courses.show', $course->id) }}"
-                                   class="px-4 py-2 bg-blue-100 text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-200 hover:border-blue-400 transition shadow flex items-center font-semibold">
-                                    <i class="fas fa-eye mr-1"></i> Lihat
-                                </a>
-                                <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kursus ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition shadow flex items-center font-semibold">
-                                        <i class="fas fa-trash mr-1"></i> Hapus
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="mt-4 text-sm text-gray-500">
-                                <i class="fas fa-users mr-1"></i> {{ $course->students_count }} Siswa Terdaftar
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-gray-800 mb-2">{{ $course->title }}</h3>
+                                <p class="text-gray-600 mb-4">{{ Str::limit($course->description, 120) }}</p>
+
+                                <div class="flex justify-between items-center gap-2">
+                                    <a href="{{ route('teacher.courses.edit', $course->id) }}"
+                                       class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition shadow">
+                                        <i class="fas fa-edit mr-1"></i> Edit
+                                    </a>
+                                    <a href="{{ route('teacher.courses.show', $course->id) }}"
+                                       class="px-4 py-2 bg-blue-100 text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-200 hover:border-blue-400 transition shadow flex items-center font-semibold">
+                                        <i class="fas fa-eye mr-1"></i> Lihat
+                                    </a>
+                                    <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kursus ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition shadow flex items-center font-semibold">
+                                            <i class="fas fa-trash mr-1"></i> Hapus
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <div class="mt-4 text-sm text-gray-500">
+                                    <i class="fas fa-users mr-1"></i> {{ $course->students_count }} Siswa Terdaftar
+                                </div>
                             </div>
                         </div>
                     @endforeach
