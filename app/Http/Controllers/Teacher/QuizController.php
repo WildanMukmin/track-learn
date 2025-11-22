@@ -11,11 +11,12 @@ class QuizController extends Controller
 {
     public function index()
     {
-    $quizzes = Quiz::with('course')
-        ->withCount('questions')  // ← Tambahkan ini
-        ->get();
+        // Ambil kuis beserta jumlah soal dan jumlah peserta yang sudah mengerjakan (attempts)
+        $quizzes = Quiz::with('course')
+            ->withCount(['questions', 'attempts'])
+            ->get();
 
-    return view('teacher.quizzes.index', compact('quizzes'));
+        return view('teacher.quizzes.index', compact('quizzes'));
     }
 
 
