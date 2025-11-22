@@ -104,7 +104,7 @@
                                         {{ $quiz->questions_count }} Soal
                                     </span>
                                     <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full shadow-sm">
-                                        {{ $quiz->attempts_count ?? 0 }} Mengikuti
+                                        {{ $quiz->attempts_count ?? 0 }} Siswa
                                     </span>
                                 </div>
                             </div>
