@@ -44,7 +44,13 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($courses as $course)
             <div class="bg-white rounded-lg shadow hover:shadow-lg transition card-hover">
-                <div class="h-32 bg-gradient-to-r from-blue-100 to-green-100 rounded-t-lg"></div>
+                @if($course->thumbnail)
+                    <div class="w-full h-40 overflow-hidden rounded-t-lg">
+                        <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="thumbnail" class="w-full h-full object-cover">
+                    </div>
+                @else
+                    <div class="h-32 bg-gradient-to-r from-blue-100 to-green-100 rounded-t-lg"></div>
+                @endif
 
                 <div class="p-4">
                     <span class="inline-block bg-emerald-600 text-white text-xs font-semibold px-2 py-1 rounded mb-2">
