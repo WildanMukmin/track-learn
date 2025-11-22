@@ -101,15 +101,17 @@
                         <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
                             <div class="flex items-center mb-4">
                                     @if($course->thumbnail)
-                                        <div class="w-16 h-12 rounded overflow-hidden mr-4 shadow">
+                                        <div class="w-24 h-24 rounded-lg overflow-hidden mr-4 shadow-lg transform transition-transform duration-200 hover:scale-105">
                                             <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="thumbnail" class="w-full h-full object-cover">
                                         </div>
                                     @else
-                                        <div class="w-12 h-12 bg-blue-700 rounded-full flex items-center justify-center mr-4 shadow">
-                                            <i class="fas fa-book text-white"></i>
+                                        <div class="w-16 h-16 bg-blue-700 rounded-lg flex items-center justify-center mr-4 shadow">
+                                            <i class="fas fa-book text-white text-2xl"></i>
                                         </div>
                                     @endif
-                                    <h3 class="text-lg font-bold text-gray-800">{{ $course->title }}</h3>
+                                    <div class="flex-1">
+                                        <h3 class="text-lg font-bold text-gray-800">{{ $course->title }}</h3>
+                                    </div>
                                 </div>
                             <p class="text-gray-600 mb-4">{{ Str::limit($course->description, 100) }}</p>
 
