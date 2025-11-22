@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
@@ -42,14 +43,21 @@ class CourseController extends Controller
             'description' => 'required',
         ]);
 
-        Course::create([
+        $data = [
             'title' => $request->title,
             'description' => $request->description,
             'teacher_id' => Auth::id(),
             'category' => $request->category,
             'difficulty' => $request->difficulty,
             'duration' => $request->duration,
-        ]);
+        ];
+
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('thumbnails', 'public');
+            $data['thumbnail'] = $path;
+        }
+
+        Course::create($data);
 
         return redirect()->route('teacher.courses')->with('success', 'Kursus berhasil dibuat.');
     }
@@ -77,7 +85,17 @@ class CourseController extends Controller
             'description' => 'required',
         ]);
 
-        $course->update($request->only(['title', 'description', 'category', 'difficulty', 'duration']));
+        $data = $request->only(['title', 'description', 'category', 'difficulty', 'duration']);
+        if ($request->hasFile('thumbnail')) {
+            // hapus thumbnail lama jika ada
+            if ($course->thumbnail) {
+                Storage::disk('public')->delete($course->thumbnail);
+            }
+            $path = $request->file('thumbnail')->store('thumbnails', 'public');
+            $data['thumbnail'] = $path;
+        }
+
+        $course->update($data);
 
         return redirect()->route('teacher.courses')->with('success', 'Kursus berhasil diperbarui.');
     }

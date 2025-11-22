@@ -100,11 +100,17 @@
                     @foreach($courses as $course)
                         <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
                             <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 bg-blue-700 rounded-full flex items-center justify-center mr-4 shadow">
-                                    <i class="fas fa-book text-white"></i>
+                                    @if($course->thumbnail)
+                                        <div class="w-16 h-12 rounded overflow-hidden mr-4 shadow">
+                                            <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="thumbnail" class="w-full h-full object-cover">
+                                        </div>
+                                    @else
+                                        <div class="w-12 h-12 bg-blue-700 rounded-full flex items-center justify-center mr-4 shadow">
+                                            <i class="fas fa-book text-white"></i>
+                                        </div>
+                                    @endif
+                                    <h3 class="text-lg font-bold text-gray-800">{{ $course->title }}</h3>
                                 </div>
-                                <h3 class="text-lg font-bold text-gray-800">{{ $course->title }}</h3>
-                            </div>
                             <p class="text-gray-600 mb-4">{{ Str::limit($course->description, 100) }}</p>
 
                             <div class="flex justify-between items-center gap-2">
