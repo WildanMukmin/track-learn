@@ -99,9 +99,14 @@
                         <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition">
                             <div class="flex justify-between items-center mb-3">
                                 <h3 class="text-lg font-bold text-gray-800">{{ $quiz->title }}</h3>
-                                <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full shadow-sm">
-                                    {{ $quiz->questions_count }} Soal
-                                </span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full shadow-sm">
+                                        {{ $quiz->questions_count }} Soal
+                                    </span>
+                                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full shadow-sm">
+                                        {{ $quiz->attempts_count ?? 0 }} Mengikuti
+                                    </span>
+                                </div>
                             </div>
                             <p class="text-sm text-gray-500 mb-4">
                                 Dibuat pada {{ $quiz->created_at->format('d M Y') }}
