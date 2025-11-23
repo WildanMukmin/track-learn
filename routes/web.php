@@ -20,7 +20,6 @@ use App\Http\Controllers\Student\EnrollmentController as StudentEnrollmentContro
 use App\Http\Controllers\Student\MaterialController as StudentMaterialController;
 use App\Http\Controllers\Student\QuizController as StudentQuizController;
 use App\Http\Controllers\Student\CertificateController as StudentCertificateController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes

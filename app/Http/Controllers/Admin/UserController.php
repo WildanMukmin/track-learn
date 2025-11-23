@@ -81,6 +81,10 @@ class UserController extends Controller
         $user->email = $validated['email'];
         $user->role = $validated['role'];
 
+        if($request->email_verified_at && $user->email_verified_at == null){ 
+            $user->email_verified_at = now();
+        }
+
         // Only update password if provided
         if ($request->filled('password')) {
             $user->password = Hash::make($validated['password']);

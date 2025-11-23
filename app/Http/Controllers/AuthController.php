@@ -40,6 +40,14 @@ class AuthController extends Controller
 
         $remember = $request->boolean('remember');
 
+        $user = User::where('email', $credentials['email'])->first();
+
+        if ($user->email_verified_at == null) {
+            return back()->withErrors([
+                'email' => 'Email belum diverifikasi.',
+            ]);
+        }
+
         // Attempt login
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
@@ -101,14 +109,14 @@ class AuthController extends Controller
             'role' => $validated['role'],
         ]);
 
-        // Login the user
-        Auth::login($user);
+        // // Login the user
+        // Auth::login($user);
 
-        // Regenerate session
-        $request->session()->regenerate();
+        // // Regenerate session
+        // $request->session()->regenerate();
 
         // Redirect based on role with success message
-        return $this->redirectBasedOnRole()->with('success', 'Registrasi berhasil! Selamat datang di TrackLearn.');
+        return redirect()->route('login')->with('status', 'Registrasi berhasil! Silahkan Tunggu Admin untuk menyetujui akun Anda.');
     }
 
     /**
