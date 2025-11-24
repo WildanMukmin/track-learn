@@ -15,6 +15,9 @@ class StudentController extends Controller
         $students = User::where('role', 'student')
             ->with('enrolledCourses') // relasi dari model User
             ->get()
+            ->filter(function ($student) {
+                return $student->enrolledCourses->isNotEmpty();
+            })
             ->map(function ($student) {
                 // Tambahkan field progress dummy (misalnya random sementara)
                 $student->progress = rand(20, 100);

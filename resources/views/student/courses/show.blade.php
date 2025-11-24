@@ -165,7 +165,7 @@
 
         <!-- Tombol Sertifikat -->
         @if($certificateReady)
-            <a href="{{ route('student.course.certificate', $course->id) }}"
+            <a href="{{ url('/certificate/'. $course->id) }}" 
                class="mt-3 inline-block bg-blue-600 text-white px-4 py-2 rounded shadow text-sm">
                Download Sertifikat
             </a>

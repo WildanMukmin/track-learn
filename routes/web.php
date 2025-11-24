@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CertificateController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -28,6 +29,8 @@ use App\Http\Controllers\Student\CertificateController as StudentCertificateCont
 
 // 🌐 Public Routes
 Route::get('/', [DashboardController::class, 'home'])->name('home');
+Route::get('/certificate/{courseId}', [CertificateController::class, 'generate']);
+
 
 // 👤 Guest Routes
 Route::middleware('guest')->group(function () {
