@@ -77,6 +77,8 @@
 
                 <form action="{{ route('teacher.courses.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="teacher_id" value="{{ Auth::id() }}">
+
 
                     <!-- Judul Kursus -->
                     <div class="mb-4">

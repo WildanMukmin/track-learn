@@ -37,37 +37,85 @@
     @if($enrollments->count())
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($enrollments as $enrollment)
+                @php $course = $enrollment->course; @endphp
+
                 <div class="bg-white rounded-lg shadow hover:shadow-lg transition">
-                    <div class="h-32 bg-gradient-to-r from-blue-100 to-green-100 rounded-t-lg"></div>
+
+                    {{-- Thumbnail --}}
+                    @if($course->thumbnail)
+                        <div class="w-full h-40 overflow-hidden rounded-t-lg">
+                            <img src="{{ asset('storage/' . $course->thumbnail) }}"
+                                alt="thumbnail"
+                                class="w-full h-full object-cover">
+                        </div>
+                    @else
+                        <div class="h-40 bg-gradient-to-r from-blue-100 to-green-100 rounded-t-lg"></div>
+                    @endif
+
                     <div class="p-4">
-                        <h2 class="font-bold text-xl text-gray-800 mb-2">
-                            {{ $enrollment->course->title }}
+
+                        {{-- Difficulty --}}
+                        <span class="inline-block bg-emerald-600 text-white text-xs font-semibold px-2 py-1 rounded mb-2">
+                            {{ $course->difficulty ?? 'Unknown Level' }}
+                        </span>
+
+                        {{-- Title --}}
+                        <h2 class="font-bold text-xl text-gray-800 mb-1">
+                            {{ $course->title }}
                         </h2>
 
-                        <p class="text-gray-600 text-sm mb-3">
-                            {{ \Illuminate\Support\Str::limit($enrollment->course->description, 100) }}
+                        {{-- Category --}}
+                        @if($course->category)
+                            <p class="text-sm text-green-700 font-semibold mb-1">
+                                Category: {{ $course->category }}
+                            </p>
+                        @endif
+
+                        {{-- Description --}}
+                        <p class="text-gray-600 text-sm mb-2">
+                            {{ Str::limit($course->description, 90) }}
                         </p>
 
-                        <p class="text-sm text-gray-600 mb-1">
-                            <strong>Pengajar:</strong> {{ $enrollment->course->teacher->name ?? '-' }}
+                        {{-- Duration --}}
+                        @if($course->duration)
+                            <p class="text-sm text-gray-500 mb-2">
+                                <i class="fas fa-clock"></i> {{ $course->duration }}
+                            </p>
+                        @endif
+
+                        {{-- Students Count --}}
+                        <p class="text-sm text-gray-500 mb-3">
+                            <i class="fas fa-user"></i> {{ number_format($course->students->count()) }} students
                         </p>
 
-                        <p class="text-sm text-gray-600 mb-3">
+                        <hr class="my-3">
+
+                        {{-- Instructor --}}
+                        <p class="text-sm text-gray-600">Instructor</p>
+                        <p class="font-semibold text-gray-800 mb-3">
+                            {{ $course->teacher->name ?? '-' }}
+                        </p>
+
+                        {{-- Status --}}
+                        <p class="text-sm text-gray-600 mb-4">
                             <strong>Status:</strong>
                             <span class="inline-block bg-blue-600 text-white text-xs px-2 py-1 rounded">
                                 {{ ucfirst(str_replace('_', ' ', $enrollment->status)) }}
                             </span>
                         </p>
 
+                        {{-- Footer --}}
                         <div class="flex justify-between items-center">
-                            <a href="{{ route('student.courses.show', $enrollment->course->id) }}"
+                            <a href="{{ route('student.courses.show', $course->id) }}"
                                 class="text-sm font-semibold text-blue-600 hover:text-blue-800">
                                     Lihat Detail
                             </a>
+
                             <span class="text-xs text-gray-400">
                                 {{ $enrollment->created_at->format('d M Y') }}
                             </span>
                         </div>
+
                     </div>
                 </div>
             @endforeach

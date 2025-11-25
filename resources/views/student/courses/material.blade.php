@@ -8,8 +8,10 @@
 
     <!-- Header Navigasi -->
     <div class="mb-4 flex items-center justify-between">
-        <a href="{{ route('student.courses.show', $course->id) }}" 
-           class="text-blue-600 text-sm">← Kembali ke Kursus</a>
+        <a href="{{ route('student.courses.show', $course->id) }}"
+            class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium rounded-lg">
+            Kembali ke Kursus
+        </a>
     </div>
 
     <!-- Judul -->
@@ -43,8 +45,8 @@
                 <!-- optional tombol download -->
                 <a href="{{ asset('storage/' . $material->file_path) }}"
                    target="_blank"
-                   class="mt-2 inline-block text-blue-600 text-sm">
-                    Download PDF →
+                   class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700">
+                    Download PDF
                 </a>
             </div>
         @endif
@@ -63,9 +65,10 @@
         @csrf
 
         @if($progress && $progress->is_completed)
-            <button class="bg-green-600 text-white px-4 py-2 rounded shadow">
-                ✓ Sudah Selesai
+            <button class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700">
+                Sudah Selesai
             </button>
+
         @else
             <button class="bg-blue-600 text-white px-4 py-2 rounded shadow">
                 Tandai Selesai
@@ -78,7 +81,7 @@
 
         @if($previous)
             <a href="{{ route('student.courses.material.show', [$course->id, $previous->id]) }}"
-               class="text-blue-600 text-sm">
+               class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium rounded-lg">
                ← {{ $previous->title }}
             </a>
         @else
@@ -88,7 +91,7 @@
         @if($next)
             @if($progress && $progress->is_completed)
                 <a href="{{ route('student.courses.material.show', [$course->id, $next->id]) }}"
-                   class="text-blue-600 text-sm">
+                   class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg">
                     {{ $next->title }} →
                 </a>
             @else

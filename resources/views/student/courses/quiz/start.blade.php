@@ -8,8 +8,18 @@
 
     <!-- Header -->
     <div class="mb-4">
-        <a href="{{ route('student.courses.show', $courseId) }}" 
-           class="text-blue-600 text-sm">← Kembali ke Kursus</a>
+        <a href="{{ route('student.courses.show', $courseId) }}"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium rounded-lg">
+
+            <!-- Ikon back (Heroicons) -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15 19l-7-7 7-7" />
+            </svg>
+
+            Kembali ke Kursus
+        </a>
     </div>
 
     <h1 class="text-2xl font-bold text-gray-900 mb-4">{{ $quiz->title }}</h1>
@@ -25,7 +35,7 @@
                 
                 <!-- Nomor soal -->
                 <h3 class="font-semibold text-gray-800 mb-2">
-                    {{ $index + 1 }}. {{ $question->question }}
+                    {{ $index + 1 }}. {{ $question->question_text }}
                 </h3>
 
                 <!-- Pilihan -->

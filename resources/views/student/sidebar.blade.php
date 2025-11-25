@@ -18,8 +18,8 @@
                class="flex items-center px-4 py-3 rounded-lg {{ Route::is('student.courses.search') ? 'bg-green-900' : 'hover:bg-green-700 transition' }}">
                 <i class="fas fa-search mr-3"></i> Cari Kursus
             </a>
-            <a href="#"
-               class="flex items-center px-4 py-3 rounded-lg hover:bg-green-700 transition">
+            <a href="{{ route('student.certificate.list') }}"
+               class="flex items-center px-4 py-3 rounded-lg {{ Route::is('student.certificate.list') ? 'bg-green-900' : 'hover:bg-green-700 transition' }}">
                 <i class="fas fa-certificate mr-3"></i> Sertifikat
             </a>
         </nav>
