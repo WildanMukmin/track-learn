@@ -97,64 +97,6 @@
                             </span>
                         </div>
 
-                        <!-- Progress Tracking -->
-                        <div class="mb-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm font-semibold text-gray-700">Progress Belajar</span>
-                                <span class="text-sm font-semibold text-green-600">
-                                    @php
-                                        $statusProgress = [
-                                            'enrolled' => 10,
-                                            'in_progress' => 30,
-                                            'material_completed' => 60,
-                                            'quiz_attempted' => 80,
-                                            'passed' => 90,
-                                            'certificate_issued' => 100
-                                        ];
-                                        $progress = $statusProgress[$enrollment->status] ?? 0;
-                                    @endphp
-                                    {{ $progress }}%
-                                </span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="progress-bar bg-green-600 h-2 rounded-full" style="width: {{ $progress }}%"></div>
-                            </div>
-
-                            <!-- Progress Steps -->
-                            <div class="flex justify-between mt-4 text-xs">
-                                <div
-                                    class="flex flex-col items-center {{ in_array($enrollment->status, ['enrolled', 'in_progress', 'material_completed', 'quiz_attempted', 'passed', 'certificate_issued']) ? 'text-green-600' : 'text-gray-400' }}">
-                                    <i class="fas fa-check-circle text-lg mb-1"></i>
-                                    <span>Enrolled</span>
-                                </div>
-                                <div
-                                    class="flex flex-col items-center {{ in_array($enrollment->status, ['in_progress', 'material_completed', 'quiz_attempted', 'passed', 'certificate_issued']) ? 'text-green-600' : 'text-gray-400' }}">
-                                    <i class="fas fa-book-open text-lg mb-1"></i>
-                                    <span>Belajar</span>
-                                </div>
-                                <div
-                                    class="flex flex-col items-center {{ in_array($enrollment->status, ['material_completed', 'quiz_attempted', 'passed', 'certificate_issued']) ? 'text-green-600' : 'text-gray-400' }}">
-                                    <i class="fas fa-tasks text-lg mb-1"></i>
-                                    <span>Materi</span>
-                                </div>
-                                <div
-                                    class="flex flex-col items-center {{ in_array($enrollment->status, ['quiz_attempted', 'passed', 'certificate_issued']) ? 'text-green-600' : 'text-gray-400' }}">
-                                    <i class="fas fa-question-circle text-lg mb-1"></i>
-                                    <span>Kuis</span>
-                                </div>
-                                <div
-                                    class="flex flex-col items-center {{ in_array($enrollment->status, ['passed', 'certificate_issued']) ? 'text-green-600' : 'text-gray-400' }}">
-                                    <i class="fas fa-trophy text-lg mb-1"></i>
-                                    <span>Lulus</span>
-                                </div>
-                                <div
-                                    class="flex flex-col items-center {{ $enrollment->status == 'certificate_issued' ? 'text-green-600' : 'text-gray-400' }}">
-                                    <i class="fas fa-certificate text-lg mb-1"></i>
-                                    <span>Sertifikat</span>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="flex space-x-2">
                             <a href="#"
                                 class="flex-1 px-4 py-2 bg-green-600 text-white text-center rounded-lg hover:bg-green-700 transition text-sm">

@@ -54,15 +54,28 @@
 
                 <div class="p-4">
                     <span class="inline-block bg-emerald-600 text-white text-xs font-semibold px-2 py-1 rounded mb-2">
-                        Beginner
+                        {{ $course->difficulty ?? 'Unknown Level' }}
                     </span>
 
                     <h2 class="font-bold text-xl text-gray-800 mb-1">
                         {{ $course->title }}
                     </h2>
+
+                    @if($course->category)
+                        <p class="text-sm text-green-700 font-semibold mb-1">
+                            Category: {{ $course->category }}
+                        </p>
+                    @endif
+
                     <p class="text-gray-600 text-sm mb-2">
                         {{ Str::limit($course->description, 90) }}
                     </p>
+
+                    @if($course->duration)
+                        <p class="text-sm text-gray-500 mb-2">
+                            <i class="fas fa-clock"></i> Duration: {{ $course->duration }}
+                        </p>
+                    @endif
 
                     <div class="flex items-center justify-between text-sm text-gray-500">
                         <span><i class="fas fa-user"></i> {{ number_format($course->students->count()) }} students</span>

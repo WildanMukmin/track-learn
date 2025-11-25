@@ -69,7 +69,7 @@ class QuizController extends Controller
             'enrollment_id' => $enrollment->id,
             'student_id'    => Auth::id(),
             'score'         => $score,
-            'is_passed'     => $score >= 70,
+            'is_passed'     => $score >= 80,
         ]);
 
         return redirect()->route('student.courses.show', $courseId)

@@ -77,7 +77,7 @@
                     <span class="text-gray-500 text-sm">Terkunci</span>
                 @else
                     <a href="{{ route('student.courses.material.show', [$course->id, $material->id]) }}"
-                       class="text-blue-600 text-sm">Belajar →</a>
+                       class="text-blue-600 text-sm">Belajar</a>
                 @endif
 
                 <!-- Status -->
@@ -103,7 +103,7 @@
 
         @forelse($quizzes as $quiz)
             @php
-                $attempt = $quizAttempts->where('quiz_id', $quiz->id)->first();
+                $attempt = $quizAttempts->where('quiz_id', $quiz->id)->last();
                 $passed = $attempt && $attempt->is_passed;
             @endphp
 
@@ -121,7 +121,7 @@
                     <span class="text-gray-500 text-sm">Terkunci</span>
                 @else
                     <a href="{{ route('student.courses.quiz.start', [$course->id, $quiz->id]) }}"
-                       class="text-blue-600 text-sm">Kerjakan →</a>
+                       class="text-blue-600 text-sm">Kerjakan</a>
                 @endif
 
                 <!-- Status -->
@@ -138,17 +138,36 @@
 
 
 
-    <!-- Sertifikat -->
+        <!-- Sertifikat -->
     @php
+        // Hitung total kuis lulus (berdasarkan attempt terbaru)
         $totalQuiz = count($quizzes);
-        $passedQuiz = $quizAttempts->where('is_passed', true)->count();
+        $passedQuiz = $quizzes->filter(function ($quiz) use ($quizAttempts) {
+            $latestAttempt = $quizAttempts
+                ->where('quiz_id', $quiz->id)
+                ->sortBy('created_at')
+                ->last();
 
-        $certificateReady = $completedMaterial == $totalMaterial && $passedQuiz == $totalQuiz;
+            return $latestAttempt && $latestAttempt->is_passed;
+        })->count();
 
+        // Cek apakah semua materi selesai
+        $allMaterialDone = ($completedMaterial == $totalMaterial);
+
+        // Bisa klaim jika semua materi selesai + semua kuis lulus
+        $certificateReady = $allMaterialDone && ($passedQuiz == $totalQuiz);
+
+        // Hitung progress (%) max 100
         $certificateProgress = intval(
-            (($completedMaterial / max($totalMaterial,1)) * 50) +
-            (($passedQuiz / max($totalQuiz,1)) * 50)
+            (($completedMaterial / max($totalMaterial, 1)) * 50) +
+            (($passedQuiz / max($totalQuiz, 1)) * 50)
         );
+        $certificateProgress = max(0, min($certificateProgress, 100));
+
+        // Cek apakah sertifikat sudah pernah diklaim
+        $certificateClaimed = \App\Models\Certificate::where('user_id', auth()->id())
+                            ->where('course_id', $course->id)
+                            ->exists();
     @endphp
 
     <div class="bg-white p-5 rounded-lg shadow mb-10 w-80">
@@ -165,11 +184,27 @@
 
         <!-- Tombol Sertifikat -->
         @if($certificateReady)
-            <a href="{{ url('/certificate/'. $course->id) }}" 
-               class="mt-3 inline-block bg-blue-600 text-white px-4 py-2 rounded shadow text-sm">
-               Download Sertifikat
-            </a>
+
+            @if($certificateClaimed)
+                <!-- Sudah Klaim => Munculkan Tombol Download -->
+                <a href="{{ route('student.certificate.download', $course->id) }}"
+                   class="mt-3 inline-block bg-blue-600 text-white px-4 py-2 rounded shadow text-sm">
+                   Download Sertifikat
+                </a>
+
+            @else
+                <!-- Belum Klaim => Munculkan Tombol Klaim -->
+                <form action="{{ route('student.certificate.claim', $course->id) }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="mt-3 bg-green-600 text-white px-4 py-2 rounded shadow text-sm">
+                        Klaim Sertifikat
+                    </button>
+                </form>
+            @endif
+
         @else
+            <!-- Belum memenuhi syarat -->
             <button class="mt-3 bg-gray-400 text-white px-4 py-2 rounded text-sm cursor-not-allowed">
                 Selesaikan semua materi & kuis
             </button>

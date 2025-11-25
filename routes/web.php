@@ -20,7 +20,6 @@ use App\Http\Controllers\Student\CourseController as StudentCourseController;
 use App\Http\Controllers\Student\EnrollmentController as StudentEnrollmentController;
 use App\Http\Controllers\Student\MaterialController as StudentMaterialController;
 use App\Http\Controllers\Student\QuizController as StudentQuizController;
-use App\Http\Controllers\Student\CertificateController as StudentCertificateController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -117,7 +116,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/courses/{course}/material/{material}/complete', [StudentMaterialController::class, 'complete'])->name('courses.material.complete');
         Route::get('/courses/{course}/quiz/{quiz}/start', [StudentQuizController::class, 'start'])->name('courses.quiz.start');
         Route::post('/courses/{course}/quiz/{quiz}/submit', [StudentQuizController::class, 'submit'])->name('courses.quiz.submit');
-        Route::get('/courses/{course}/certificate', [StudentCertificateController::class, 'show'])->name('course.certificate');
-    });
+        // Klaim sertifikat
+        Route::post('/certificate/claim/{courseId}', [CertificateController::class, 'claim'])->name('certificate.claim');
+
+        // Download sertifikat
+        Route::get('/certificate/download/{courseId}', [CertificateController::class, 'generate'])->name('certificate.download');
+
+        // Sidebar list sertifikat
+        Route::get('/my-certificates', [CertificateController::class, 'list'])->name('certificate.list');
+        });
 
 });
