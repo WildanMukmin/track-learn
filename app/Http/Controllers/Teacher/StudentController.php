@@ -10,24 +10,28 @@ use Illuminate\Http\Request;
 class StudentController extends Controller
 {
     public function index()
-    {
-        // Ambil semua siswa
-        $students = User::where('role', 'student')
-            ->with('enrolledCourses') // relasi dari model User
-            ->get()
-            ->filter(function ($student) {
-                return $student->enrolledCourses->isNotEmpty();
-            })
-            ->map(function ($student) {
-                // Tambahkan field progress dummy (misalnya random sementara)
-                $student->progress = rand(20, 100);
-                return $student;
-            });
+{
+    $teacherId = auth()->id();
 
-        $courses = Course::all();
+    // Course yang diajar oleh guru login
+    $courses = Course::where('teacher_id', $teacherId)->get();
 
-        return view('teacher.students.index', compact('students', 'courses'));
-    }
+    // Ambil ID course yang diajar guru
+    $teacherCourseIDs = $courses->pluck('id');
+
+    // Ambil siswa yang enroll ke course guru login
+    $students = User::where('role', 'student')
+        ->whereHas('enrolledCourses', function ($query) use ($teacherCourseIDs) {
+            $query->whereIn('courses.id', $teacherCourseIDs);
+        })
+        ->with(['enrolledCourses' => function ($query) use ($teacherCourseIDs) {
+            $query->whereIn('courses.id', $teacherCourseIDs);
+        }])
+        ->get();
+
+    return view('teacher.students.index', compact('students', 'courses'));
+}
+
 
     public function show($id)
     {
