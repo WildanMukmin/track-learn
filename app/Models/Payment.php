@@ -5,20 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Certificate extends Model
+class Payment extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'course_id',
-        'file_path',
-        'claimed_at',
-        'payment_id', // tambahkan ini
+        'order_id',
+        'amount',
+        'payment_type',
+        'transaction_status',
+        'transaction_id',
+        'snap_token',
+        'paid_at',
     ];
 
-    public function payment()
-    {
-        return $this->belongsTo(Payment::class);
-    }
+    protected $casts = [
+        'paid_at' => 'datetime',
+    ];
 
     public function user()
     {

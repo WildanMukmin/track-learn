@@ -139,61 +139,81 @@
 
 
         <!-- Sertifikat -->
-    @php
-        // Hitung total kuis lulus (berdasarkan attempt terbaru)
-        $totalQuiz = count($quizzes);
-        $passedQuiz = $quizzes->filter(function ($quiz) use ($quizAttempts) {
-            $latestAttempt = $quizAttempts
-                ->where('quiz_id', $quiz->id)
-                ->sortBy('created_at')
-                ->last();
+@php
+    // Hitung total kuis
+    $totalQuiz = $quizzes->count();
 
-            return $latestAttempt && $latestAttempt->is_passed;
-        })->count();
+    // Hitung kuis lulus (attempt terbaru)
+    $passedQuiz = $quizzes->filter(function ($quiz) use ($quizAttempts) {
+        $attempt = $quizAttempts->where('quiz_id', $quiz->id)
+                                ->sortByDesc('created_at')
+                                ->first();
+        return $attempt && $attempt->is_passed;
+    })->count();
 
-        // Cek apakah semua materi selesai
-        $allMaterialDone = ($completedMaterial == $totalMaterial);
+    // Syarat materi
+    $allMaterialDone = ($completedMaterial == $totalMaterial);
 
-        // Bisa klaim jika semua materi selesai + semua kuis lulus
-        $certificateReady = $allMaterialDone && ($passedQuiz == $totalQuiz);
+    // Jika tidak ada kuis → otomatis kuis dianggap selesai
+    $quizDone = ($totalQuiz == 0) ? true : ($passedQuiz == $totalQuiz);
 
-        // Hitung progress (%) max 100
-        $certificateProgress = intval(
-            (($completedMaterial / max($totalMaterial, 1)) * 50) +
-            (($passedQuiz / max($totalQuiz, 1)) * 50)
-        );
-        $certificateProgress = max(0, min($certificateProgress, 100));
+    // Sertifikat siap jika materi selesai + semua kuis lulus
+    $certificateReady = $allMaterialDone && $quizDone;
 
-        // Cek apakah sertifikat sudah pernah diklaim
-        $certificateClaimed = \App\Models\Certificate::where('user_id', auth()->id())
+    // Progress sertifikat (materi 50% + kuis 50%)
+    $certificateProgress = 0;
+
+    // Materi (50%)
+    if ($totalMaterial > 0) {
+        $certificateProgress += ($completedMaterial / $totalMaterial) * 50;
+    }
+
+    // Kuis (50%)
+    if ($totalQuiz > 0) {
+        $certificateProgress += ($passedQuiz / $totalQuiz) * 50;
+    } else {
+        // Jika tidak ada kuis → beri 50 poin penuh
+        $certificateProgress += 50;
+    }
+
+    $certificateProgress = intval(min(100, max(0, $certificateProgress)));
+
+    // Cek pembayaran
+    $hasPaid = \App\Models\Payment::where('user_id', auth()->id())
+                ->where('course_id', $course->id)
+                ->where('transaction_status', 'settlement')
+                ->exists();
+
+    // Cek sertifikat sudah di-claim atau belum
+    $certificateClaimed = \App\Models\Certificate::where('user_id', auth()->id())
                             ->where('course_id', $course->id)
                             ->exists();
-    @endphp
+@endphp
 
-    <div class="bg-white p-5 rounded-lg shadow mb-10 w-80">
-        <h2 class="text-lg font-semibold text-gray-800 mb-3">Sertifikat</h2>
 
-        <!-- Progress Sertifikat -->
-        <div class="w-full bg-gray-200 rounded-full h-3">
-            <div class="bg-blue-500 h-3 rounded-full" style="width: {{ $certificateProgress }}%;"></div>
-        </div>
+<div class="bg-white p-5 rounded-lg shadow mb-10 w-80">
+    <h2 class="text-lg font-semibold text-gray-800 mb-3">Sertifikat</h2>
 
-        <p class="text-sm text-gray-600 mt-2">
-            {{ 100 - $certificateProgress }}% lagi hingga sertifikat
-        </p>
+    <!-- Progress Sertifikat -->
+    <div class="w-full bg-gray-200 rounded-full h-3">
+        <div class="bg-blue-500 h-3 rounded-full" style="width: {{ $certificateProgress }}%;"></div>
+    </div>
 
-        <!-- Tombol Sertifikat -->
-        @if($certificateReady)
+    <p class="text-sm text-gray-600 mt-2">
+        {{ 100 - $certificateProgress }}% lagi hingga sertifikat
+    </p>
 
+    <!-- Tombol Sertifikat -->
+    @if($certificateReady)
+        @if($hasPaid)
             @if($certificateClaimed)
-                <!-- Sudah Klaim => Munculkan Tombol Download -->
+                <!-- Sudah Bayar & Klaim => Download -->
                 <a href="{{ route('student.certificate.download', $course->id) }}"
                    class="mt-3 inline-block bg-blue-600 text-white px-4 py-2 rounded shadow text-sm">
                    Download Sertifikat
                 </a>
-
             @else
-                <!-- Belum Klaim => Munculkan Tombol Klaim -->
+                <!-- Sudah Bayar tapi belum klaim => Tombol Klaim -->
                 <form action="{{ route('student.certificate.claim', $course->id) }}" method="POST">
                     @csrf
                     <button type="submit"
@@ -202,14 +222,19 @@
                     </button>
                 </form>
             @endif
-
         @else
-            <!-- Belum memenuhi syarat -->
-            <button class="mt-3 bg-gray-400 text-white px-4 py-2 rounded text-sm cursor-not-allowed">
-                Selesaikan semua materi & kuis
-            </button>
+            <!-- Belum Bayar => Tombol Bayar -->
+            <a href="{{ route('student.payment.create', $course->id) }}"
+               class="mt-3 inline-block bg-yellow-600 text-white px-4 py-2 rounded shadow text-sm">
+               Bayar Sertifikat (Rp 25.000)
+            </a>
         @endif
-    </div>
-
+    @else
+        <!-- Belum memenuhi syarat -->
+        <button class="mt-3 bg-gray-400 text-white px-4 py-2 rounded text-sm cursor-not-allowed">
+            Selesaikan semua materi & kuis
+        </button>
+    @endif
 </div>
+
 @endsection

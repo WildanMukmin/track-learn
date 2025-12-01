@@ -117,14 +117,21 @@ Route::middleware('auth')->group(function () {
         Route::post('/courses/{course}/material/{material}/complete', [StudentMaterialController::class, 'complete'])->name('courses.material.complete');
         Route::get('/courses/{course}/quiz/{quiz}/start', [StudentQuizController::class, 'start'])->name('courses.quiz.start');
         Route::post('/courses/{course}/quiz/{quiz}/submit', [StudentQuizController::class, 'submit'])->name('courses.quiz.submit');
-        // Klaim sertifikat
-        Route::post('/certificate/claim/{courseId}', [CertificateController::class, 'claim'])->name('certificate.claim');
 
-        // Download sertifikat
-        Route::get('/certificate/download/{courseId}', [CertificateController::class, 'generate'])->name('certificate.download');
-
-        // Sidebar list sertifikat
-        Route::get('/my-certificates', [CertificateController::class, 'list'])->name('certificate.list');
-        });
+        Route::get('/payment/{courseId}', [App\Http\Controllers\PaymentController::class, 'createPayment'])
+            ->name('payment.create');
+        Route::get('/payment/status/{orderId}', [App\Http\Controllers\PaymentController::class, 'checkStatus'])
+            ->name('payment.status');
+        Route::post('/certificate/claim/{courseId}', [CertificateController::class, 'claim'])
+            ->name('certificate.claim');
+        Route::get('/certificate/download/{courseId}', [CertificateController::class, 'download'])
+            ->name('certificate.download');
+        Route::get('/my-certificates', [CertificateController::class, 'list'])
+            ->name('certificate.list');
+    });
 
 });
+
+// Midtrans callback (di luar middleware auth)
+Route::post('/payment/callback', [App\Http\Controllers\PaymentController::class, 'callback'])
+    ->name('payment.callback');
