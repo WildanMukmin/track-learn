@@ -58,8 +58,9 @@
         document.getElementById('pay-button').onclick = function () {
             snap.pay('{{ $snapToken }}', {
                 onSuccess: function (result) {
+                    /* You may add your own js here, this is just example */
                     alert("Pembayaran berhasil!");
-                    window.location.href = "{{ route('student.courses.show', $course->id) }}";
+                    window.location.href = "{{ route('midtrans.callback.manual', $payment->order_id) }}";
                 },
                 onPending: function (result) {
                     alert("Menunggu pembayaran!");

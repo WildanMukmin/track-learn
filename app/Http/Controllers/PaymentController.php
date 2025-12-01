@@ -150,6 +150,24 @@ class PaymentController extends Controller
         }
     }
 
+    public function manualCallback(Request $request)
+    {
+        $data = $request->all();
+
+        $paymentId = $data['order_id'] ?? null;
+
+        if ($paymentId) {
+            Payment::where('id', 5)
+                ->update([
+                    'transaction_status' => $data['transaction_status'] ?? 'settlement',
+                    'payment_type' => $data['payment_type'] ?? null,
+                    'transaction_id' => $data['transaction_id'] ?? null,
+                ]);
+        }
+
+        return redirect()->route('student.certificate.list')->with('success', 'Pembayaran berhasil!');
+    }
+
     public function checkStatus($orderId)
     {
         $payment = Payment::where('order_id', $orderId)->firstOrFail();

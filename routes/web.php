@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -135,3 +136,5 @@ Route::middleware('auth')->group(function () {
 // Midtrans callback (di luar middleware auth)
 Route::post('/payment/callback', [App\Http\Controllers\PaymentController::class, 'callback'])
     ->name('payment.callback');
+Route::get('/midtrans/callback/manual', [PaymentController::class, 'manualCallback'])
+    ->name('midtrans.callback.manual');
