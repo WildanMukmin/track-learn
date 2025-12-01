@@ -47,21 +47,22 @@ Route::middleware('guest')->group(function () {
 
 // 🔒 Authenticated Routes
 Route::middleware('auth')->group(function () {
-
+    
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
+    
     // 🧑‍💼 Admin Routes
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
         Route::resource('users', AdminUserController::class)->except(['show', 'create']);
         Route::resource('courses', AdminCourseController::class);
+        Route::put('/courses/{course}', [AdminCourseController::class, 'update'])->name('courses.update');
     });
-
+    
     // 👨‍🏫 Teacher Routes
     Route::middleware('role:teacher')->prefix('teacher')->name('teacher.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'teacherDashboard'])->name('dashboard');
-
+        
         // === MATERIALS ===
         Route::prefix('materials')->name('materials.')->group(function () {
             Route::get('/', [TeacherMaterialController::class, 'index'])->name('index');

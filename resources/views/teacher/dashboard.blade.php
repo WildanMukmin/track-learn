@@ -35,25 +35,30 @@
                         <i class="fas fa-home mr-3"></i>
                         Dashboard
                     </a>
-                    <a href="{{ route('teacher.courses') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                    <a href="{{ route('teacher.courses') }}"
+                        class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-book mr-3"></i>
                         Kursus Saya
                     </a>
 
-                    <a href="{{ route('teacher.courses.create') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                    <a href="{{ route('teacher.courses.create') }}"
+                        class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-plus-circle mr-3"></i>
                         Buat Kursus
                     </a>
-                    <a href="{{ route('teacher.materials.index') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                    <a href="{{ route('teacher.materials.index') }}"
+                        class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-file-alt mr-3"></i>
                         Materi
                     </a>
-                    <a href="{{ route('teacher.quizzes.index') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                    <a href="{{ route('teacher.quizzes.index') }}"
+                        class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-question-circle mr-3"></i>
                         Kuis
                     </a>
 
-                    <a href="{{ route('teacher.students.index') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                    <a href="{{ route('teacher.students.index') }}"
+                        class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                         <i class="fas fa-users mr-3"></i>
                         Siswa
                     </a>
@@ -96,7 +101,8 @@
                             <i class="fas fa-bell text-xl"></i>
                             <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                         </button> --}}
-                        <a href="{{ route('teacher.courses.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                        <a href="{{ route('teacher.courses.create') }}"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                             <i class="fas fa-plus mr-2"></i>Buat Kursus
                         </a>
                     </div>
@@ -154,7 +160,8 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-xl font-bold text-gray-800">Kursus Saya</h3>
-                        <a href="{{ route('teacher.courses') }}" class="text-blue-600 hover:text-blue-700 text-sm font-semibold">Lihat Semua</a>
+                        <a href="{{ route('teacher.courses') }}"
+                            class="text-blue-600 hover:text-blue-700 text-sm font-semibold">Lihat Semua</a>
                     </div>
 
                     @if($courses->count() > 0)
@@ -188,10 +195,12 @@
                                             class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm flex items-center justify-center">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kursus ini?');">
+                                        <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST"
+                                            onsubmit="return confirm('Yakin ingin menghapus kursus ini?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm flex items-center justify-center">
+                                            <button type="submit"
+                                                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm flex items-center justify-center">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
@@ -203,7 +212,7 @@
                         <div class="text-center py-12">
                             <i class="fas fa-book text-6xl text-gray-300 mb-4"></i>
                             <p class="text-gray-500 mb-4">Anda belum memiliki kursus</p>
-                            <a href="#"
+                            <a href="{{ route('teacher.courses.create') }}"
                                 class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                                 <i class="fas fa-plus mr-2"></i>Buat Kursus Pertama
                             </a>
@@ -241,7 +250,8 @@
                                                     </div>
                                                     <div>
                                                         <p class="font-semibold text-gray-800 text-sm">
-                                                            {{ $enrollment->student->name }}</p>
+                                                            {{ $enrollment->student->name }}
+                                                        </p>
                                                         <p class="text-xs text-gray-500">{{ $enrollment->student->email }}</p>
                                                     </div>
                                                 </div>
@@ -251,11 +261,11 @@
                                             </td>
                                             <td class="py-3 px-4">
                                                 <span class="px-3 py-1 rounded-full text-xs font-semibold
-                                                    @if($enrollment->status == 'passed' || $enrollment->status == 'certificate_issued') bg-green-100 text-green-600
-                                                    @elseif($enrollment->status == 'in_progress' || $enrollment->status == 'material_completed') bg-blue-100 text-blue-600
-                                                    @elseif($enrollment->status == 'quiz_attempted') bg-yellow-100 text-yellow-600
-                                                    @else bg-gray-100 text-gray-600
-                                                    @endif">
+                                                            @if($enrollment->status == 'passed' || $enrollment->status == 'certificate_issued') bg-green-100 text-green-600
+                                                            @elseif($enrollment->status == 'in_progress' || $enrollment->status == 'material_completed') bg-blue-100 text-blue-600
+                                                            @elseif($enrollment->status == 'quiz_attempted') bg-yellow-100 text-yellow-600
+                                                            @else bg-gray-100 text-gray-600
+                                                            @endif">
                                                     {{ ucfirst(str_replace('_', ' ', $enrollment->status)) }}
                                                 </span>
                                             </td>
@@ -263,7 +273,8 @@
                                                 {{ $enrollment->created_at->diffForHumans() }}
                                             </td>
                                             <td class="py-3 px-4 text-center">
-                                                <a href="{{ route('teacher.courses.show', $enrollment->course->id) }}" class="text-blue-600 hover:text-blue-700">
+                                                <a href="{{ route('teacher.courses.show', $enrollment->course->id) }}"
+                                                    class="text-blue-600 hover:text-blue-700">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             </td>

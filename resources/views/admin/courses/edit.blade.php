@@ -40,77 +40,91 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto">
-            <!-- Header -->
-            <header class="bg-white shadow-sm">
-                <div class="px-8 py-4">
-                    <div class="flex items-center">
-                        <a href="{{ route('admin.courses.index') }}" class="mr-4 text-gray-600 hover:text-gray-800">
-                            <i class="fas fa-arrow-left text-xl"></i>
-                        </a>
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-800">Edit Kursus</h1>
-                            <p class="text-gray-600">Ubah informasi kursus</p>
-                        </div>
+        <main class="flex-1 bg-gray-100 overflow-hidden flex flex-col">
+            <header class="bg-white shadow-sm flex-shrink-0">
+                <div class="px-8 py-4 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Edit Kursus</h1>
+                        <p class="text-gray-600">Perbarui detail kursus</p>
+                    </div>
+                    <div>
+                        <a href="{{ route('admin.courses.index') }}"
+                            class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Kembali</a>
                     </div>
                 </div>
             </header>
 
-            <div class="p-8">
-                <div class="max-w-3xl mx-auto">
-                    <div class="bg-white rounded-xl shadow-lg p-8">
-                        @if ($errors->any())
-                            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                                <ul class="list-disc list-inside">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+            <div class="flex-1 overflow-y-auto p-8">
+                <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow">
+                    @if ($errors->any())
+                        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+                            <ul class="list-disc pl-5">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-                        <form method="POST" action="{{ route('admin.courses.update', $course) }}" class="space-y-6">
-                            @csrf
-                            @method('PUT')
+                    <form action="{{ route('admin.courses.update', $course->id) }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
 
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-medium mb-2">Judul Kursus</label>
+                            <input type="text" name="title" value="{{ old('title', $course->title) }}" required
+                                class="w-full border-gray-300 rounded p-2 focus:ring focus:ring-blue-300">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-medium mb-2">Deskripsi</label>
+                            <textarea name="description" rows="5" required
+                                class="w-full border-gray-300 rounded p-2 focus:ring focus:ring-blue-300">{{ old('description', $course->description) }}</textarea>
+                        </div>
+
+                        <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Judul Kursus</label>
-                                <input type="text" name="title" value="{{ old('title', $course->title) }}" required
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <label class="block text-gray-700 font-medium mb-2">Kategori</label>
+                                <input type="text" name="category" value="{{ old('category', $course->category) }}"
+                                    class="w-full border-gray-300 rounded p-2">
                             </div>
-
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Deskripsi</label>
-                                <textarea name="description" rows="6" required
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">{{ old('description', $course->description) }}</textarea>
-                                <p class="text-sm text-gray-500 mt-1">Jelaskan secara detail tentang kursus ini</p>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Pilih Guru</label>
-                                <select name="teacher_id" required
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                                    <option value="">Pilih Guru</option>
-                                    @foreach($teachers as $teacher)
-                                        <option value="{{ $teacher->id }}" {{ $course->teacher_id == $teacher->id ? 'selected' : '' }}>
-                                            {{ $teacher->name }} ({{ $teacher->email }})
-                                        </option>
-                                    @endforeach
+                                <label class="block text-gray-700 font-medium mb-2">Tingkat Kesulitan</label>
+                                <select name="difficulty" class="w-full border-gray-300 rounded p-2">
+                                    <option value="">-- Pilih --</option>
+                                    <option value="pemula" {{ old('difficulty', $course->difficulty) == 'pemula' ? 'selected' : '' }}>Pemula</option>
+                                    <option value="menengah" {{ old('difficulty', $course->difficulty) == 'menengah' ? 'selected' : '' }}>Menengah</option>
+                                    <option value="lanjutan" {{ old('difficulty', $course->difficulty) == 'lanjutan' ? 'selected' : '' }}>Lanjutan</option>
                                 </select>
                             </div>
+                        </div>
 
-                            <div class="flex space-x-3 pt-4">
-                                <a href="{{ route('admin.courses.index') }}"
-                                    class="flex-1 px-6 py-3 border border-gray-300 text-gray-700 text-center rounded-lg hover:bg-gray-50 transition">
-                                    Batal
-                                </a>
-                                <button type="submit"
-                                    class="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
-                                    Simpan Perubahan
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-medium mb-2">Durasi / Perkiraan Waktu</label>
+                            <input type="text" name="duration" value="{{ old('duration', $course->duration) }}"
+                                placeholder="Contoh: 5 jam, 10 modul" class="w-full border-gray-300 rounded p-2">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-medium mb-2">Thumbnail (opsional)</label>
+                            @if($course->thumbnail)
+                                <div class="mb-3">
+                                    <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="thumbnail"
+                                        class="w-48 h-28 object-cover rounded">
+                                </div>
+                            @endif
+                            <input type="file" name="thumbnail" class="w-full text-gray-600">
+                        </div>
+
+                        <div class="flex justify-end space-x-3">
+                            <a href="{{ route('admin.courses.index') }}"
+                                class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Batal</a>
+                            <button type="submit"
+                                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan
+                                Perubahan</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </main>

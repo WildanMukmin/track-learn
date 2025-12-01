@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\User;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
@@ -106,31 +107,26 @@ class CourseController extends Controller
      */
     public function update(Request $request, Course $course)
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'teacher_id' => ['required', 'exists:users,id'],
-        ], [
-            'title.required' => 'Judul kursus wajib diisi',
-            'description.required' => 'Deskripsi wajib diisi',
-            'teacher_id.required' => 'Guru wajib dipilih',
-            'teacher_id.exists' => 'Guru tidak ditemukan',
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
         ]);
 
-        // Verify the selected user is a teacher
-        $teacher = User::find($validated['teacher_id']);
-        if ($teacher->role !== 'teacher') {
-            return redirect()->back()
-                ->withErrors(['teacher_id' => 'Pengguna yang dipilih bukan guru'])
-                ->withInput();
+        $data = $request->only(['title', 'description', 'category', 'difficulty', 'duration']);
+        if ($request->hasFile('thumbnail')) {
+            // hapus thumbnail lama jika ada
+            if ($course->thumbnail) {
+                Storage::disk('public')->delete($course->thumbnail);
+            }
+            $path = $request->file('thumbnail')->store('thumbnails', 'public');
+            $data['thumbnail'] = $path;
         }
 
-        $course->update($validated);
+        $course->update($data);
 
         return redirect()->route('admin.courses.index')
             ->with('success', 'Kursus berhasil diperbarui!');
     }
-
     /**
      * Remove the specified course
      */

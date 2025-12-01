@@ -68,10 +68,6 @@
                             <h1 class="text-2xl font-bold text-gray-800">Kelola Kursus</h1>
                             <p class="text-gray-600">Manajemen seluruh kursus di platform</p>
                         </div>
-                        <button onclick="openModal('createModal')"
-                            class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
-                            <i class="fas fa-plus mr-2"></i>Tambah Kursus
-                        </button>
                     </div>
                 </div>
             </header>
@@ -168,8 +164,9 @@
                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition course-card"
                             data-teacher="{{ $course->teacher_id }}">
                             <!-- Course Header -->
-                            <div class="h-32 bg-gradient-to-r from-purple-400 to-pink-400 flex items-center justify-center">
-                                <i class="fas fa-book text-white text-5xl"></i>
+                            <div class="w-full h-40 overflow-hidden rounded-t-lg">
+                                <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="thumbnail"
+                                    class="w-full h-full object-cover">
                             </div>
 
                             <!-- Course Content -->
@@ -181,9 +178,21 @@
                                     </span>
                                 </div>
 
+
+                                @if($course->category)
+                                    <p class="text-sm text-green-700 font-semibold mb-1">
+                                        Category: {{ $course->category }}
+                                    </p>
+                                @endif
                                 <p class="text-gray-600 text-sm mb-4 line-clamp-2">
                                     {{ Str::limit($course->description, 100) }}
                                 </p>
+
+                                @if($course->duration)
+                                    <p class="text-sm text-gray-500 mb-2">
+                                        <i class="fas fa-clock"></i> Duration: {{ $course->duration }}
+                                    </p>
+                                @endif
 
                                 <div class="flex items-center text-sm text-gray-500 mb-3">
                                     <i class="fas fa-user mr-2"></i>
