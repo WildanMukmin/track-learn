@@ -58,19 +58,25 @@
         document.getElementById('pay-button').onclick = function () {
             snap.pay('{{ $snapToken }}', {
                 onSuccess: function (result) {
-                    /* You may add your own js here, this is just example */
-                    alert("Pembayaran berhasil!");
-                    window.location.href = "{{ route('midtrans.callback.manual', $payment->order_id) }}";
+                    console.log('Payment Success:', result);
+                    alert("Pembayaran berhasil! Silakan tunggu konfirmasi.");
+
+                    // Redirect ke halaman kursus
+                    window.location.href = "{{ route('student.courses.show', $course->id) }}";
                 },
                 onPending: function (result) {
-                    alert("Menunggu pembayaran!");
+                    console.log('Payment Pending:', result);
+                    alert("Menunggu pembayaran! Silakan selesaikan pembayaran Anda.");
+
+                    // Redirect ke halaman kursus
                     window.location.href = "{{ route('student.courses.show', $course->id) }}";
                 },
                 onError: function (result) {
-                    alert("Pembayaran gagal!");
-                    console.log(result);
+                    console.log('Payment Error:', result);
+                    alert("Pembayaran gagal! Silakan coba lagi.");
                 },
                 onClose: function () {
+                    console.log('Payment popup closed');
                     alert('Anda menutup popup tanpa menyelesaikan pembayaran');
                 }
             });

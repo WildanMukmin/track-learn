@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Midtrans\Notification;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -36,7 +37,7 @@ class PaymentController extends Controller
             if ($existingPayment->transaction_status === 'settlement') {
                 return redirect()->back()->with('info', 'Anda sudah melakukan pembayaran untuk sertifikat ini.');
             }
-            
+
             // Jika pending, gunakan snap token yang sudah ada
             return view('student.payment.checkout', [
                 'snapToken' => $existingPayment->snap_token,
@@ -83,7 +84,7 @@ class PaymentController extends Controller
         try {
             // Dapatkan Snap Token
             $snapToken = Snap::getSnapToken($params);
-            
+
             // Update payment dengan snap token
             $payment->update(['snap_token' => $snapToken]);
 
@@ -101,53 +102,143 @@ class PaymentController extends Controller
     public function callback(Request $request)
     {
         try {
+            // Log untuk debugging
+            Log::info('Midtrans Callback Received', $request->all());
+
             $notification = new Notification();
 
             $orderId = $notification->order_id;
             $transactionStatus = $notification->transaction_status;
+            $fraudStatus = $notification->fraud_status ?? null;
             $paymentType = $notification->payment_type;
             $transactionId = $notification->transaction_id;
 
+            Log::info("Processing payment for Order ID: {$orderId}, Status: {$transactionStatus}");
+
             // Cari payment
-            $payment = Payment::where('order_id', $orderId)->firstOrFail();
+            $payment = Payment::where('order_id', $orderId)->first();
 
-            // Update status pembayaran
-            if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
-                $payment->update([
-                    'transaction_status' => 'settlement',
-                    'payment_type' => $paymentType,
-                    'transaction_id' => $transactionId,
-                    'paid_at' => now(),
-                ]);
+            if (!$payment) {
+                Log::error("Payment not found for Order ID: {$orderId}");
+                return response()->json(['status' => 'error', 'message' => 'Payment not found'], 404);
+            }
 
-                // Buat sertifikat otomatis
-                Certificate::create([
-                    'user_id' => $payment->user_id,
-                    'course_id' => $payment->course_id,
-                    'payment_id' => $payment->id,
-                    'claimed_at' => now(),
-                ]);
-
+            // Update status pembayaran berdasarkan transaction_status
+            if ($transactionStatus == 'capture') {
+                if ($fraudStatus == 'accept') {
+                    // Transaksi berhasil
+                    $this->processSuccessPayment($payment, $paymentType, $transactionId);
+                } else if ($fraudStatus == 'challenge') {
+                    // Transaksi di-challenge, tunggu approval manual
+                    $payment->update([
+                        'transaction_status' => 'challenge',
+                        'payment_type' => $paymentType,
+                        'transaction_id' => $transactionId,
+                    ]);
+                    Log::info("Payment challenged for Order ID: {$orderId}");
+                } else {
+                    // Transaksi ditolak
+                    $payment->update([
+                        'transaction_status' => 'deny',
+                        'payment_type' => $paymentType,
+                        'transaction_id' => $transactionId,
+                    ]);
+                    Log::info("Payment denied for Order ID: {$orderId}");
+                }
+            } elseif ($transactionStatus == 'settlement') {
+                // Transaksi berhasil (untuk payment method selain credit card)
+                $this->processSuccessPayment($payment, $paymentType, $transactionId);
             } elseif ($transactionStatus == 'pending') {
                 $payment->update([
                     'transaction_status' => 'pending',
                     'payment_type' => $paymentType,
                     'transaction_id' => $transactionId,
                 ]);
-
-            } elseif ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel') {
+                Log::info("Payment pending for Order ID: {$orderId}");
+            } elseif ($transactionStatus == 'deny') {
                 $payment->update([
-                    'transaction_status' => $transactionStatus,
+                    'transaction_status' => 'deny',
                     'payment_type' => $paymentType,
                     'transaction_id' => $transactionId,
                 ]);
+                Log::info("Payment denied for Order ID: {$orderId}");
+            } elseif ($transactionStatus == 'expire') {
+                $payment->update([
+                    'transaction_status' => 'expire',
+                    'payment_type' => $paymentType,
+                    'transaction_id' => $transactionId,
+                ]);
+                Log::info("Payment expired for Order ID: {$orderId}");
+            } elseif ($transactionStatus == 'cancel') {
+                $payment->update([
+                    'transaction_status' => 'cancel',
+                    'payment_type' => $paymentType,
+                    'transaction_id' => $transactionId,
+                ]);
+                Log::info("Payment cancelled for Order ID: {$orderId}");
             }
 
             return response()->json(['status' => 'success']);
 
         } catch (\Exception $e) {
+            Log::error('Midtrans Callback Error: ' . $e->getMessage());
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+    private function processSuccessPayment($payment, $paymentType, $transactionId)
+    {
+        $payment->update([
+            'transaction_status' => 'settlement',
+            'payment_type' => $paymentType,
+            'transaction_id' => $transactionId,
+            'paid_at' => now(),
+        ]);
+
+        // Buat sertifikat otomatis jika belum ada
+        $certificate = Certificate::where('user_id', $payment->user_id)
+            ->where('course_id', $payment->course_id)
+            ->first();
+
+        if (!$certificate) {
+            Certificate::create([
+                'user_id' => $payment->user_id,
+                'course_id' => $payment->course_id,
+                'payment_id' => $payment->id,
+                'claimed_at' => now(),
+            ]);
+            Log::info("Certificate created for payment ID: {$payment->id}");
+        }
+
+        Log::info("Payment settled for Order ID: {$payment->order_id}");
+    }
+
+    public function checkStatus($orderId)
+    {
+        $payment = Payment::where('order_id', $orderId)->firstOrFail();
+
+        return response()->json([
+            'status' => $payment->transaction_status,
+            'payment' => $payment,
+        ]);
+    }
+
+    // Tambahkan method untuk handle finish redirect
+    public function finish(Request $request)
+    {
+        $orderId = $request->get('order_id');
+
+        if ($orderId) {
+            $payment = Payment::where('order_id', $orderId)->first();
+
+            if ($payment) {
+                return redirect()->route('student.courses.show', $payment->course_id)
+                    ->with('success', 'Pembayaran sedang diproses. Silakan cek status pembayaran Anda.');
+            }
+        }
+
+        return redirect()->route('student.dashboard')
+            ->with('info', 'Pembayaran sedang diproses.');
     }
 
     public function manualCallback(Request $request)
@@ -166,15 +257,5 @@ class PaymentController extends Controller
         }
 
         return redirect()->route('student.certificate.list')->with('success', 'Pembayaran berhasil!');
-    }
-
-    public function checkStatus($orderId)
-    {
-        $payment = Payment::where('order_id', $orderId)->firstOrFail();
-        
-        return response()->json([
-            'status' => $payment->transaction_status,
-            'payment' => $payment,
-        ]);
     }
 }

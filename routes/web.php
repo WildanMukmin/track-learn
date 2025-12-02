@@ -133,8 +133,11 @@ Route::middleware('auth')->group(function () {
 
 });
 
-// Midtrans callback (di luar middleware auth)
+// Midtrans callback dan finish (di luar middleware auth)
 Route::post('/payment/callback', [App\Http\Controllers\PaymentController::class, 'callback'])
     ->name('payment.callback');
+
+Route::get('/payment/finish', [App\Http\Controllers\PaymentController::class, 'finish'])
+    ->name('payment.finish');
 Route::get('/midtrans/callback/manual', [PaymentController::class, 'manualCallback'])
     ->name('midtrans.callback.manual');
