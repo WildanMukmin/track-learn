@@ -54,22 +54,31 @@
     <!-- Midtrans Snap JS -->
     <script src="https://app.sandbox.midtrans.com/snap/snap.js"
         data-client-key="{{ config('midtrans.client_key') }}"></script>
+
     <script type="text/javascript">
         document.getElementById('pay-button').onclick = function () {
             snap.pay('{{ $snapToken }}', {
                 onSuccess: function (result) {
                     console.log('Payment Success:', result);
-                    alert("Pembayaran berhasil! Silakan tunggu konfirmasi.");
 
-                    // Redirect ke halaman kursus
-                    window.location.href = "{{ route('student.courses.show', $course->id) }}";
+                    // Kirim callback manual ke Laravel
+                    fetch("{{ route('payment.callback.manual') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify(result)
+                    });
+
+                    // Redirect ke finish
+                    window.location.href = "{{ route('payment.finish') }}?order_id=" + result.order_id;
                 },
+
                 onPending: function (result) {
                     console.log('Payment Pending:', result);
-                    alert("Menunggu pembayaran! Silakan selesaikan pembayaran Anda.");
 
-                    // Redirect ke halaman kursus
-                    window.location.href = "{{ route('student.courses.show', $course->id) }}";
+                    window.location.href = "{{ route('payment.finish') }}?order_id=" + result.order_id;
                 },
                 onError: function (result) {
                     console.log('Payment Error:', result);

@@ -185,6 +185,92 @@ class PaymentController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
+    public function callbackManual(Request $request)
+    {
+        try {
+            // Log untuk debugging
+            Log::info('Midtrans Callback Received', $request->all());
+
+            $notification = new Notification();
+
+            $orderId = $notification->order_id;
+            $transactionStatus = $notification->transaction_status;
+            $fraudStatus = $notification->fraud_status ?? null;
+            $paymentType = $notification->payment_type;
+            $transactionId = $notification->transaction_id;
+
+            Log::info("Processing payment for Order ID: {$orderId}, Status: {$transactionStatus}");
+
+            // Cari payment
+            $payment = Payment::where('order_id', $orderId)->first();
+
+            if (!$payment) {
+                Log::error("Payment not found for Order ID: {$orderId}");
+                return response()->json(['status' => 'error', 'message' => 'Payment not found'], 404);
+            }
+
+            // Update status pembayaran berdasarkan transaction_status
+            if ($transactionStatus == 'capture') {
+                if ($fraudStatus == 'accept') {
+                    // Transaksi berhasil
+                    $this->processSuccessPayment($payment, $paymentType, $transactionId);
+                } else if ($fraudStatus == 'challenge') {
+                    // Transaksi di-challenge, tunggu approval manual
+                    $payment->update([
+                        'transaction_status' => 'challenge',
+                        'payment_type' => $paymentType,
+                        'transaction_id' => $transactionId,
+                    ]);
+                    Log::info("Payment challenged for Order ID: {$orderId}");
+                } else {
+                    // Transaksi ditolak
+                    $payment->update([
+                        'transaction_status' => 'deny',
+                        'payment_type' => $paymentType,
+                        'transaction_id' => $transactionId,
+                    ]);
+                    Log::info("Payment denied for Order ID: {$orderId}");
+                }
+            } elseif ($transactionStatus == 'settlement') {
+                // Transaksi berhasil (untuk payment method selain credit card)
+                $this->processSuccessPayment($payment, $paymentType, $transactionId);
+            } elseif ($transactionStatus == 'pending') {
+                $payment->update([
+                    'transaction_status' => 'pending',
+                    'payment_type' => $paymentType,
+                    'transaction_id' => $transactionId,
+                ]);
+                Log::info("Payment pending for Order ID: {$orderId}");
+            } elseif ($transactionStatus == 'deny') {
+                $payment->update([
+                    'transaction_status' => 'deny',
+                    'payment_type' => $paymentType,
+                    'transaction_id' => $transactionId,
+                ]);
+                Log::info("Payment denied for Order ID: {$orderId}");
+            } elseif ($transactionStatus == 'expire') {
+                $payment->update([
+                    'transaction_status' => 'expire',
+                    'payment_type' => $paymentType,
+                    'transaction_id' => $transactionId,
+                ]);
+                Log::info("Payment expired for Order ID: {$orderId}");
+            } elseif ($transactionStatus == 'cancel') {
+                $payment->update([
+                    'transaction_status' => 'cancel',
+                    'payment_type' => $paymentType,
+                    'transaction_id' => $transactionId,
+                ]);
+                Log::info("Payment cancelled for Order ID: {$orderId}");
+            }
+
+            return response()->json(['status' => 'success']);
+
+        } catch (\Exception $e) {
+            Log::error('Midtrans Callback Error: ' . $e->getMessage());
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
 
     private function processSuccessPayment($payment, $paymentType, $transactionId)
     {
@@ -241,21 +327,4 @@ class PaymentController extends Controller
             ->with('info', 'Pembayaran sedang diproses.');
     }
 
-    public function manualCallback(Request $request)
-    {
-        $data = $request->all();
-
-        $paymentId = $data['order_id'] ?? null;
-
-        if ($paymentId) {
-            Payment::where('id', 5)
-                ->update([
-                    'transaction_status' => $data['transaction_status'] ?? 'settlement',
-                    'payment_type' => $data['payment_type'] ?? null,
-                    'transaction_id' => $data['transaction_id'] ?? null,
-                ]);
-        }
-
-        return redirect()->route('student.certificate.list')->with('success', 'Pembayaran berhasil!');
-    }
 }
