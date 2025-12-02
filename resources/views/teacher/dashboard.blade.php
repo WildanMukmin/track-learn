@@ -166,44 +166,47 @@
 
                     @if($courses->count() > 0)
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach($courses as $course)
-                                <div class="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-book text-blue-600 text-xl"></i>
+                            @foreach($courses->take(3) as $course)
+                                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+                                    <!-- Banner thumbnail besar -->
+                                    @if($course->thumbnail)
+                                        <div class="w-full h-40 bg-gray-200 overflow-hidden">
+                                            <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="thumbnail"
+                                                class="w-full h-full object-cover">
                                         </div>
-                                        <span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-semibold">
-                                            Aktif
-                                        </span>
-                                    </div>
-                                    <h4 class="font-bold text-gray-800 mb-2">{{ $course->title }}</h4>
-                                    <p class="text-sm text-gray-600 mb-4">{{ Str::limit($course->description, 80) }}</p>
-
-                                    <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
-                                        <div class="flex items-center">
-                                            <i class="fas fa-users mr-2"></i>
-                                            <span>{{ $course->enrollments_count }} Siswa</span>
+                                    @else
+                                        <div class="w-full h-40 bg-blue-700 flex items-center justify-center">
+                                            <i class="fas fa-book text-white text-4xl"></i>
                                         </div>
-                                    </div>
+                                    @endif
 
-                                    <div class="flex space-x-2">
-                                        <a href="{{ route('teacher.courses.edit', $course->id) }}"
-                                            class="flex-1 px-4 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition text-sm">
-                                            <i class="fas fa-edit mr-1"></i>Edit
-                                        </a>
-                                        <a href="{{ route('teacher.courses.show', $course->id) }}"
-                                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm flex items-center justify-center">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST"
-                                            onsubmit="return confirm('Yakin ingin menghapus kursus ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm flex items-center justify-center">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
+                                    <div class="p-6">
+                                        <h3 class="text-lg font-bold text-gray-800 mb-2">{{ $course->title }}</h3>
+                                        <p class="text-gray-600 mb-4">{{ Str::limit($course->description, 120) }}</p>
+
+                                        <div class="flex justify-between items-center gap-2">
+                                            <a href="{{ route('teacher.courses.edit', $course->id) }}"
+                                                class="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition shadow">
+                                                <i class="fas fa-edit mr-1"></i> Edit
+                                            </a>
+                                            <a href="{{ route('teacher.courses.show', $course->id) }}"
+                                                class="px-4 py-2 bg-blue-100 text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-200 hover:border-blue-400 transition shadow flex items-center font-semibold">
+                                                <i class="fas fa-eye mr-1"></i> Lihat
+                                            </a>
+                                            <form action="{{ route('teacher.courses.destroy', $course->id) }}" method="POST"
+                                                onsubmit="return confirm('Yakin ingin menghapus kursus ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition shadow flex items-center font-semibold">
+                                                    <i class="fas fa-trash mr-1"></i> Hapus
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        <div class="mt-4 text-sm text-gray-500">
+                                            <i class="fas fa-users mr-1"></i> {{ $course->students_count }} Siswa Terdaftar
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -261,11 +264,11 @@
                                             </td>
                                             <td class="py-3 px-4">
                                                 <span class="px-3 py-1 rounded-full text-xs font-semibold
-                                                            @if($enrollment->status == 'passed' || $enrollment->status == 'certificate_issued') bg-green-100 text-green-600
-                                                            @elseif($enrollment->status == 'in_progress' || $enrollment->status == 'material_completed') bg-blue-100 text-blue-600
-                                                            @elseif($enrollment->status == 'quiz_attempted') bg-yellow-100 text-yellow-600
-                                                            @else bg-gray-100 text-gray-600
-                                                            @endif">
+                                                                                    @if($enrollment->status == 'passed' || $enrollment->status == 'certificate_issued') bg-green-100 text-green-600
+                                                                                    @elseif($enrollment->status == 'in_progress' || $enrollment->status == 'material_completed') bg-blue-100 text-blue-600
+                                                                                    @elseif($enrollment->status == 'quiz_attempted') bg-yellow-100 text-yellow-600
+                                                                                    @else bg-gray-100 text-gray-600
+                                                                                    @endif">
                                                     {{ ucfirst(str_replace('_', ' ', $enrollment->status)) }}
                                                 </span>
                                             </td>

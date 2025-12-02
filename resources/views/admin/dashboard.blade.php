@@ -179,10 +179,10 @@
                                         </div>
                                     </div>
                                     <span class="px-3 py-1 rounded-full text-xs font-semibold
-                                                                        @if($user->role == 'admin') bg-red-100 text-red-600
-                                                                        @elseif($user->role == 'teacher') bg-blue-100 text-blue-600
-                                                                        @else bg-green-100 text-green-600
-                                                                        @endif">
+                                                                            @if($user->role == 'admin') bg-red-100 text-red-600
+                                                                            @elseif($user->role == 'teacher') bg-blue-100 text-blue-600
+                                                                            @else bg-green-100 text-green-600
+                                                                            @endif">
                                         {{ ucfirst($user->role) }}
                                     </span>
                                 </div>
@@ -217,18 +217,6 @@
                             @empty
                                 <p class="text-gray-500 text-center py-4">Belum ada kursus</p>
                             @endforelse
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chart Section -->
-                <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-6">Statistik Enrollments</h3>
-                    <div class="h-64 flex items-center justify-center text-gray-500">
-                        <div class="text-center">
-                            <i class="fas fa-chart-line text-6xl mb-4 text-gray-400"></i>
-                            <p>Chart akan ditampilkan di sini</p>
-                            <p class="text-sm">(Gunakan Chart.js atau library lain)</p>
                         </div>
                     </div>
                 </div>
