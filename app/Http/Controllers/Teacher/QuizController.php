@@ -10,19 +10,22 @@ use App\Models\Course;
 class QuizController extends Controller
 {
     public function index()
-    {
-        // Ambil kuis beserta jumlah soal dan jumlah peserta yang sudah mengerjakan (attempts)
-        $quizzes = Quiz::with('course')
-            ->withCount(['questions', 'attempts'])
-            ->get();
+{
+    $quizzes = Quiz::whereHas('course', function ($query) {
+        $query->where('teacher_id', auth()->id());
+    })
+    ->with('course')
+    ->withCount(['questions', 'attempts'])
+    ->get();
 
-        return view('teacher.quizzes.index', compact('quizzes'));
-    }
+    return view('teacher.quizzes.index', compact('quizzes'));
+}
+
 
 
     public function create()
     {
-        $courses = Course::all();
+        $courses = Course::where('teacher_id', auth()->id())->get();
         return view('teacher.quizzes.create', compact('courses'));
     }
 
@@ -74,21 +77,46 @@ class QuizController extends Controller
     public function edit($id)
 {
     $quiz = Quiz::with('questions')->findOrFail($id);
-    $courses = \App\Models\Course::all(); // atau filter khusus guru
+    $courses = Course::where('teacher_id', auth()->id())->get();
 
     return view('teacher.quizzes.edit', compact('quiz', 'courses'));
 }
 
 
 
-    public function update(Request $request, $id)
-    {
+public function update(Request $request, $id)
+{
     $quiz = Quiz::findOrFail($id);
 
-    $quiz->title = $request->title;
-    $quiz->save();
+    // UPDATE quiz
+    $quiz->update([
+        'course_id' => $request->course_id,
+        'title' => $request->title,
+    ]);
 
-    return redirect()->route('teacher.quizzes.index')->with('success', 'Quiz berhasil diperbarui.');
+    // ================================
+    // UPDATE QUESTIONS
+    // ================================
+    // Hapus semua soal lama
+    \App\Models\Question::where('quiz_id', $quiz->id)->delete();
+
+    // Tambahkan soal baru dari form
+    if ($request->has('questions')) {
+        foreach ($request->questions as $q) {
+            \App\Models\Question::create([
+                'quiz_id' => $quiz->id,
+                'question_text' => $q['question_text'] ?? null,
+                'option_a' => $q['option_a'] ?? null,
+                'option_b' => $q['option_b'] ?? null,
+                'option_c' => $q['option_c'] ?? null,
+                'option_d' => $q['option_d'] ?? null,
+                'correct_answer' => $q['correct_answer'] ?? null,
+            ]);
+        }
     }
+
+    return redirect()->route('teacher.quizzes.index')->with('success', 'Quiz berhasil diperbarui!');
+}
+
 
 }

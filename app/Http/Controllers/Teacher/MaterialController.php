@@ -13,7 +13,10 @@ class MaterialController extends Controller
     // Daftar materi
     public function index()
     {
-        $materials = Material::with('course')->latest()->get();
+        $materials = Material::whereHas('course', function ($query) {
+        $query->where('teacher_id', Auth::id());
+        })->with('course')->latest()->get();
+
         return view('teacher.materials.index', compact('materials'));
     }
 
