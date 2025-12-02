@@ -83,6 +83,8 @@ class UserController extends Controller
 
         if($request->email_verified_at && $user->email_verified_at == null){ 
             $user->email_verified_at = now();
+        }else if($request->email_verified_at && $user->email_verified_at != null){
+            $user->email_verified_at = null;
         }
 
         // Only update password if provided

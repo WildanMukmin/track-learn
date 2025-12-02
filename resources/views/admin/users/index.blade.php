@@ -123,6 +123,8 @@
                                     <th class="text-left py-4 px-6 text-sm font-semibold text-gray-700">Status
                                         Verifikasi</th>
                                     <th class="text-left py-4 px-6 text-sm font-semibold text-gray-700">Terdaftar</th>
+                                    <th class="text-left py-4 px-6 text-sm font-semibold text-gray-700">Terakhir Diubah
+                                    </th>
                                     <th class="text-center py-4 px-6 text-sm font-semibold text-gray-700">Aksi</th>
                                 </tr>
                             </thead>
@@ -132,15 +134,15 @@
                                         <td class="py-4 px-6">
                                             <div class="flex items-center">
                                                 <div class="w-10 h-10 rounded-full flex items-center justify-center
-                                                                        @if($user->role == 'admin') bg-red-100
-                                                                        @elseif($user->role == 'teacher') bg-blue-100
-                                                                        @else bg-green-100
-                                                                        @endif">
+                                                                                @if($user->role == 'admin') bg-red-100
+                                                                                @elseif($user->role == 'teacher') bg-blue-100
+                                                                                @else bg-green-100
+                                                                                @endif">
                                                     <i class="fas 
-                                                                            @if($user->role == 'admin') fa-user-shield text-red-600
-                                                                            @elseif($user->role == 'teacher') fa-chalkboard-teacher text-blue-600
-                                                                            @else fa-user-graduate text-green-600
-                                                                            @endif"></i>
+                                                                                    @if($user->role == 'admin') fa-user-shield text-red-600
+                                                                                    @elseif($user->role == 'teacher') fa-chalkboard-teacher text-blue-600
+                                                                                    @else fa-user-graduate text-green-600
+                                                                                    @endif"></i>
                                                 </div>
                                                 <div class="ml-4">
                                                     <p class="font-semibold text-gray-800">{{ $user->name }}</p>
@@ -150,10 +152,10 @@
                                         <td class="py-4 px-6 text-gray-600">{{ $user->email }}</td>
                                         <td class="py-4 px-6">
                                             <span class="px-3 py-1 rounded-full text-xs font-semibold
-                                                        @if($user->role == 'admin') bg-red-100 text-red-600
-                                                        @elseif($user->role == 'teacher') bg-blue-100 text-blue-600
-                                                        @else bg-green-100 text-green-600
-                                                        @endif">
+                                                                @if($user->role == 'admin') bg-red-100 text-red-600
+                                                                @elseif($user->role == 'teacher') bg-blue-100 text-blue-600
+                                                                @else bg-green-100 text-green-600
+                                                                @endif">
                                                 {{ ucfirst($user->role) }}
                                             </span>
                                         </td>
@@ -162,6 +164,9 @@
                                         </td>
                                         <td class="py-4 px-6 text-gray-600 text-sm">
                                             {{ $user->created_at->format('d M Y') }}
+                                        </td>
+                                        <td class="py-4 px-6 text-gray-600 text-sm">
+                                            {{ $user->updated_at->format('d M Y') }}
                                         </td>
                                         <td class=" py-4 px-6">
                                             <div class="flex justify-center space-x-2">

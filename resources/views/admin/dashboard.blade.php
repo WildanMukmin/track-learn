@@ -179,10 +179,10 @@
                                         </div>
                                     </div>
                                     <span class="px-3 py-1 rounded-full text-xs font-semibold
-                                                                            @if($user->role == 'admin') bg-red-100 text-red-600
-                                                                            @elseif($user->role == 'teacher') bg-blue-100 text-blue-600
-                                                                            @else bg-green-100 text-green-600
-                                                                            @endif">
+                                                                                    @if($user->role == 'admin') bg-red-100 text-red-600
+                                                                                    @elseif($user->role == 'teacher') bg-blue-100 text-blue-600
+                                                                                    @else bg-green-100 text-green-600
+                                                                                    @endif">
                                         {{ ucfirst($user->role) }}
                                     </span>
                                 </div>
