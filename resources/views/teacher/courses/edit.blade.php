@@ -21,26 +21,39 @@
                 <a href="{{ route('teacher.courses.create') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
                     <i class="fas fa-plus-circle mr-3"></i> Buat Kursus
                 </a>
+
+                <a href="{{ route('teacher.materials.index') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                <i class="fas fa-file-alt mr-3"></i> Materi
+                </a>
+                    
+                <a href="{{ route('teacher.quizzes.index') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                <i class="fas fa-question-circle mr-3"></i> Kuis
+                </a>
+
+                <a href="{{ route('teacher.students.index') }}" class="flex items-center px-4 py-3 hover:bg-blue-700 rounded-lg transition">
+                <i class="fas fa-users mr-3"></i> Siswa
+                </a>
             </nav>
         </div>
 
-        <div class="p-6 border-t border-blue-700">
-            <div class="flex items-center">
-                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                    <i class="fas fa-chalkboard-teacher"></i>
+            <div class="absolute bottom-0 w-64 p-6 border-t border-blue-700">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="font-semibold">{{ Auth::user()->name }}</p>
+                        <p class="text-sm text-blue-300">Guru</p>
+                    </div>
                 </div>
-                <div class="ml-3">
-                    <p class="font-semibold">{{ Auth::user()->name }}</p>
-                    <p class="text-sm text-blue-300">Guru</p>
-                </div>
+                <form method="POST" action="{{ route('logout') }}" class="mt-4">
+                    @csrf
+                    <button type="submit"
+                        class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition text-sm">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </form>
             </div>
-            <form method="POST" action="{{ route('logout') }}" class="mt-4">
-                @csrf
-                <button type="submit" class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition text-sm">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                </button>
-            </form>
-        </div>
     </aside>
 
     <!-- main -->

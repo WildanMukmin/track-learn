@@ -94,5 +94,22 @@ public function update(Request $request, $id)
                      ->with('success', 'Materi berhasil diperbarui!');
 }
 
+// Hapus materi
+public function destroy($id)
+{
+    $material = Material::findOrFail($id);
+
+    // Jika ada file, hapus file fisiknya
+    if ($material->file_path) {
+        \Storage::disk('public')->delete($material->file_path);
+    }
+
+    $material->delete();
+
+    return redirect()->route('teacher.materials.index')
+                     ->with('success', 'Materi berhasil dihapus!');
+}
+
+
 }
 

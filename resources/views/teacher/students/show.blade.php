@@ -42,7 +42,7 @@
                 </nav>
             </div>
 
-            <div class="p-6 border-t border-blue-700">
+            <div class="absolute bottom-0 w-64 p-6 border-t border-blue-700">
                 <div class="flex items-center">
                     <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                         <i class="fas fa-chalkboard-teacher"></i>
@@ -56,7 +56,7 @@
                     @csrf
                     <button type="submit"
                         class="w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition text-sm">
-                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
                     </button>
                 </form>
             </div>

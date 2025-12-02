@@ -72,6 +72,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/{id}', [TeacherMaterialController::class, 'show'])->name('show');
             Route::get('/{id}/edit', [TeacherMaterialController::class, 'edit'])->name('edit');
             Route::put('/{id}', [TeacherMaterialController::class, 'update'])->name('update');
+            Route::delete('/{id}', [TeacherMaterialController::class, 'destroy'])->name('destroy');
+
         });
 
         // === COURSES (DIPERBAIKI + ROUTE SHOW DITAMBAHKAN) ===

@@ -51,6 +51,11 @@
         </div>
     </div>
 
+    <script>
+    console.log("SnapToken:", "{{ $snapToken }}");
+    </script>
+
+
     <!-- Midtrans Snap JS -->
     <script src="https://app.sandbox.midtrans.com/snap/snap.js"
         data-client-key="{{ config('midtrans.client_key') }}"></script>
