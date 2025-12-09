@@ -15,7 +15,6 @@ class DashboardController extends Controller
      */
     public function adminDashboard()
     {
-        // Check if user is admin
         if (Auth::user()->role !== 'admin') {
             abort(403, 'Unauthorized action.');
         }
@@ -38,14 +37,12 @@ class DashboardController extends Controller
      */
     public function teacherDashboard()
     {
-        // Check if user is teacher
         if (Auth::user()->role !== 'teacher') {
             abort(403, 'Unauthorized action.');
         }
 
         $teacherId = Auth::id();
 
-        // Hitung tingkat kelulusan rata-rata kelas
         $totalEnrollments = Enrollment::whereHas('course', function($query) use ($teacherId) {
             $query->where('teacher_id', $teacherId);
         })->count();
@@ -83,7 +80,6 @@ class DashboardController extends Controller
      */
     public function studentDashboard()
     {
-        // Check if user is student
         if (Auth::user()->role !== 'student') {
             abort(403, 'Unauthorized action.');
         }

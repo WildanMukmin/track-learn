@@ -9,10 +9,8 @@ class SiswaController extends Controller
 {
     public function index()
     {
-        // Ambil semua user dengan role student
         $students = User::where('role', 'student')->get();
 
-        // Kirim data ke view
         return view('teacher.siswa.index', compact('students'));
     }
 

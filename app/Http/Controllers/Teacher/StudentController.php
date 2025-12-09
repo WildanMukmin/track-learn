@@ -13,13 +13,10 @@ class StudentController extends Controller
 {
     $teacherId = auth()->id();
 
-    // Course yang diajar oleh guru login
     $courses = Course::where('teacher_id', $teacherId)->get();
 
-    // Ambil ID course yang diajar guru
     $teacherCourseIDs = $courses->pluck('id');
 
-    // Ambil siswa yang enroll ke course guru login
     $students = User::where('role', 'student')
         ->whereHas('enrolledCourses', function ($query) use ($teacherCourseIDs) {
             $query->whereIn('courses.id', $teacherCourseIDs);

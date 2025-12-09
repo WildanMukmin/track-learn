@@ -15,7 +15,6 @@ class PaymentController extends Controller
 {
     public function __construct()
     {
-        // Set Midtrans configuration
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
         Config::$isSanitized = config('midtrans.is_sanitized');
@@ -27,7 +26,6 @@ class PaymentController extends Controller
         $user = auth()->user();
         $course = Course::findOrFail($courseId);
 
-        // Cek apakah sudah ada payment yang pending atau success
         $existingPayment = Payment::where('user_id', $user->id)
             ->where('course_id', $courseId)
             ->whereIn('transaction_status', ['pending', 'settlement'])
@@ -38,7 +36,6 @@ class PaymentController extends Controller
                 return redirect()->back()->with('info', 'Anda sudah melakukan pembayaran untuk sertifikat ini.');
             }
 
-            // Jika pending, gunakan snap token yang sudah ada
             return view('student.payment.checkout', [
                 'snapToken' => $existingPayment->snap_token,
                 'course' => $course,
@@ -46,13 +43,10 @@ class PaymentController extends Controller
             ]);
         }
 
-        // Buat order ID unik
         $orderId = 'CERT-' . $courseId . '-' . $user->id . '-' . time();
 
-        // Harga sertifikat (bisa diatur sesuai kebutuhan)
-        $certificatePrice = 25000; // Rp 25.000
+        $certificatePrice = 25000; 
 
-        // Buat payment record
         $payment = Payment::create([
             'user_id' => $user->id,
             'course_id' => $courseId,
@@ -61,7 +55,6 @@ class PaymentController extends Controller
             'transaction_status' => 'pending',
         ]);
 
-        // Siapkan parameter transaksi
         $params = [
             'transaction_details' => [
                 'order_id' => $orderId,
@@ -82,10 +75,8 @@ class PaymentController extends Controller
         ];
 
         try {
-            // Dapatkan Snap Token
             $snapToken = Snap::getSnapToken($params);
 
-            // Update payment dengan snap token
             $payment->update(['snap_token' => $snapToken]);
 
             return view('student.payment.checkout', [
@@ -102,7 +93,6 @@ class PaymentController extends Controller
     public function callback(Request $request)
     {
         try {
-            // Log untuk debugging
             Log::info('Midtrans Callback Received', $request->all());
 
             $notification = new Notification();
@@ -115,7 +105,6 @@ class PaymentController extends Controller
 
             Log::info("Processing payment for Order ID: {$orderId}, Status: {$transactionStatus}");
 
-            // Cari payment
             $payment = Payment::where('order_id', $orderId)->first();
 
             if (!$payment) {
@@ -123,13 +112,10 @@ class PaymentController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Payment not found'], 404);
             }
 
-            // Update status pembayaran berdasarkan transaction_status
             if ($transactionStatus == 'capture') {
                 if ($fraudStatus == 'accept') {
-                    // Transaksi berhasil
                     $this->processSuccessPayment($payment, $paymentType, $transactionId);
                 } else if ($fraudStatus == 'challenge') {
-                    // Transaksi di-challenge, tunggu approval manual
                     $payment->update([
                         'transaction_status' => 'challenge',
                         'payment_type' => $paymentType,
@@ -137,7 +123,6 @@ class PaymentController extends Controller
                     ]);
                     Log::info("Payment challenged for Order ID: {$orderId}");
                 } else {
-                    // Transaksi ditolak
                     $payment->update([
                         'transaction_status' => 'deny',
                         'payment_type' => $paymentType,
@@ -146,7 +131,6 @@ class PaymentController extends Controller
                     Log::info("Payment denied for Order ID: {$orderId}");
                 }
             } elseif ($transactionStatus == 'settlement') {
-                // Transaksi berhasil (untuk payment method selain credit card)
                 $this->processSuccessPayment($payment, $paymentType, $transactionId);
             } elseif ($transactionStatus == 'pending') {
                 $payment->update([
@@ -188,7 +172,6 @@ class PaymentController extends Controller
     public function callbackManual(Request $request)
     {
         try {
-            // Log untuk debugging
             Log::info('Midtrans Callback Received', $request->all());
 
             $notification = new Notification();
@@ -201,7 +184,6 @@ class PaymentController extends Controller
 
             Log::info("Processing payment for Order ID: {$orderId}, Status: {$transactionStatus}");
 
-            // Cari payment
             $payment = Payment::where('order_id', $orderId)->first();
 
             if (!$payment) {
@@ -209,13 +191,10 @@ class PaymentController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Payment not found'], 404);
             }
 
-            // Update status pembayaran berdasarkan transaction_status
             if ($transactionStatus == 'capture') {
                 if ($fraudStatus == 'accept') {
-                    // Transaksi berhasil
                     $this->processSuccessPayment($payment, $paymentType, $transactionId);
                 } else if ($fraudStatus == 'challenge') {
-                    // Transaksi di-challenge, tunggu approval manual
                     $payment->update([
                         'transaction_status' => 'challenge',
                         'payment_type' => $paymentType,
@@ -223,7 +202,6 @@ class PaymentController extends Controller
                     ]);
                     Log::info("Payment challenged for Order ID: {$orderId}");
                 } else {
-                    // Transaksi ditolak
                     $payment->update([
                         'transaction_status' => 'deny',
                         'payment_type' => $paymentType,
@@ -232,7 +210,6 @@ class PaymentController extends Controller
                     Log::info("Payment denied for Order ID: {$orderId}");
                 }
             } elseif ($transactionStatus == 'settlement') {
-                // Transaksi berhasil (untuk payment method selain credit card)
                 $this->processSuccessPayment($payment, $paymentType, $transactionId);
             } elseif ($transactionStatus == 'pending') {
                 $payment->update([
@@ -281,7 +258,6 @@ class PaymentController extends Controller
             'paid_at' => now(),
         ]);
 
-        // Buat sertifikat otomatis jika belum ada
         $certificate = Certificate::where('user_id', $payment->user_id)
             ->where('course_id', $payment->course_id)
             ->first();
@@ -309,7 +285,6 @@ class PaymentController extends Controller
         ]);
     }
 
-    // Tambahkan method untuk handle finish redirect
     public function finish(Request $request)
     {
         $orderId = $request->get('order_id');

@@ -30,7 +30,6 @@ class PasswordResetController extends Controller
             'email.email' => 'Format email tidak valid',
         ]);
 
-        // Send password reset link
         $status = Password::sendResetLink(
             $request->only('email')
         );
@@ -72,7 +71,6 @@ class PasswordResetController extends Controller
             'password.min' => 'Password minimal 8 karakter',
         ]);
 
-        // Reset password
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {

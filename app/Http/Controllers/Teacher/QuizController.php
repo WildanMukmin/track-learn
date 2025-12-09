@@ -36,20 +36,16 @@ class QuizController extends Controller
         'title' => 'required|string|max:255',
     ]);
 
-    // Tambahkan variabel $quiz
     $quiz = Quiz::create([
         'course_id' => $request->course_id,
         'title' => $request->title,
     ]);
 
-    // ================================
-    // Tambahan untuk menyimpan questions
-    // ================================
     if ($request->has('questions') && is_array($request->questions)) {
         foreach ($request->questions as $q) {
             \App\Models\Question::create([
                 'quiz_id' => $quiz->id,
-                'question_text' => $q['question_text'] ?? null,  // <-- penting
+                'question_text' => $q['question_text'] ?? null,  
                 'option_a' => $q['option_a'] ?? null,
                 'option_b' => $q['option_b'] ?? null,
                 'option_c' => $q['option_c'] ?? null,
@@ -58,7 +54,6 @@ class QuizController extends Controller
             ]);
         }
     }
-    // ================================
 
     return redirect()->route('teacher.quizzes.index')->with('success', 'Kuis berhasil dibuat!');
 }
@@ -88,19 +83,13 @@ public function update(Request $request, $id)
 {
     $quiz = Quiz::findOrFail($id);
 
-    // UPDATE quiz
     $quiz->update([
         'course_id' => $request->course_id,
         'title' => $request->title,
     ]);
 
-    // ================================
-    // UPDATE QUESTIONS
-    // ================================
-    // Hapus semua soal lama
     \App\Models\Question::where('quiz_id', $quiz->id)->delete();
 
-    // Tambahkan soal baru dari form
     if ($request->has('questions')) {
         foreach ($request->questions as $q) {
             \App\Models\Question::create([

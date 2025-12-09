@@ -16,10 +16,8 @@ class QuizController extends Controller
     {
         $quiz = Quiz::with('questions')->findOrFail($quizId);
 
-        // Pastikan quiz milik course 
         abort_if($quiz->course_id != $courseId, 404);
 
-        // Ambil enrollment student
         $enrollment = Enrollment::where('course_id', $courseId)
             ->where('student_id', Auth::id())
             ->firstOrFail();
@@ -48,22 +46,17 @@ class QuizController extends Controller
                 continue;
             }
 
-            // Jawaban student: "A" / "B" / "C" / "D" → ubah ke huruf kecil
-            $studentLetter = strtolower($answers[$question->id]); // hasil: a/b/c/d
+            $studentLetter = strtolower($answers[$question->id]); 
 
-            // Jawaban guru: sudah a/b/c/d
             $correctAnswer = strtolower($question->correct_answer);
 
-            // Bandingkan
             if ($studentLetter === $correctAnswer) {
                 $correct++;
             }
         }
 
-        // Hitung nilai
         $score = round(($correct / max($quiz->questions->count(), 1)) * 100);
 
-        // Simpan hasil attempt
         QuizAttempt::create([
             'quiz_id'       => $quiz->id,
             'enrollment_id' => $enrollment->id,

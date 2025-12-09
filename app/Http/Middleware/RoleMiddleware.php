@@ -15,12 +15,10 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        // Check if user is authenticated
         if (!auth()->check()) {
             return redirect()->route('login');
         }
 
-        // Check if user has the required role
         if (auth()->user()->role !== $role) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }

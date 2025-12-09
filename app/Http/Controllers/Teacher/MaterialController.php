@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class MaterialController extends Controller
 {
-    // Daftar materi
     public function index()
     {
         $materials = Material::whereHas('course', function ($query) {
@@ -20,22 +19,19 @@ class MaterialController extends Controller
         return view('teacher.materials.index', compact('materials'));
     }
 
-    // Detail materi
     public function show($id)
     {
         $material = Material::with('course')->findOrFail($id);
         return view('teacher.materials.show', compact('material'));
     }
 
-    // Form tambah materi
     public function create()
     {
-    $courses = Auth::user()->coursesTeaching ?? collect(); // aman untuk loop
+    $courses = Auth::user()->coursesTeaching ?? collect();
     return view('teacher.materials.create', compact('courses'));
     }
 
 
-    // Simpan materi baru
     public function store(Request $request)
     {
         $request->validate([
@@ -60,7 +56,6 @@ class MaterialController extends Controller
                          ->with('success', 'Materi berhasil ditambahkan!');
     }
 
-    // Form edit materi
 public function edit($id)
 {
     $material = Material::findOrFail($id);
@@ -68,7 +63,6 @@ public function edit($id)
     return view('teacher.materials.edit', compact('material', 'courses'));
 }
 
-// Update materi
 public function update(Request $request, $id)
 {
     $material = Material::findOrFail($id);
@@ -94,12 +88,10 @@ public function update(Request $request, $id)
                      ->with('success', 'Materi berhasil diperbarui!');
 }
 
-// Hapus materi
 public function destroy($id)
 {
     $material = Material::findOrFail($id);
 
-    // Jika ada file, hapus file fisiknya
     if ($material->file_path) {
         \Storage::disk('public')->delete($material->file_path);
     }

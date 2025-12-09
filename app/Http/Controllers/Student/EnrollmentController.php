@@ -16,17 +16,14 @@ class EnrollmentController extends Controller
     {
         $student = Auth::user();
 
-        // Pastikan user sudah login
         if (!$student) {
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        // Ambil semua kursus yang sudah di-enroll user ini
         $enrollments = Enrollment::with('course.teacher')
             ->where('student_id', $student->id)
             ->get();
 
-        // Kalau belum pernah enroll
         if ($enrollments->isEmpty()) {
             return view('student.courses.my-courses', [
                 'enrollments' => $enrollments,
@@ -41,10 +38,8 @@ class EnrollmentController extends Controller
     {
         $student = Auth::user();
 
-        // Cek apakah kursus ada
         $course = Course::findOrFail($courseId);
 
-        // Cek apakah sudah pernah enroll
         $alreadyEnrolled = Enrollment::where('student_id', $student->id)
             ->where('course_id', $course->id)
             ->exists();
@@ -54,7 +49,6 @@ class EnrollmentController extends Controller
                 ->with('info', 'Kamu sudah terdaftar di kursus ini.');
         }
 
-        // Simpan data enrollment baru
         Enrollment::create([
             'student_id' => $student->id,
             'course_id' => $course->id,

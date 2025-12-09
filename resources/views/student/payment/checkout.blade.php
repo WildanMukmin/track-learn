@@ -52,7 +52,7 @@
     </div>
 
     <script>
-    console.log("SnapToken:", "{{ $snapToken }}");
+        console.log("SnapToken:", "{{ $snapToken }}");
     </script>
 
 
@@ -66,7 +66,6 @@
                 onSuccess: function (result) {
                     console.log('Payment Success:', result);
 
-                    // Kirim callback manual ke Laravel
                     fetch("{{ route('payment.callback.manual') }}", {
                         method: "POST",
                         headers: {
@@ -76,7 +75,6 @@
                         body: JSON.stringify(result)
                     });
 
-                    // Redirect ke finish
                     window.location.href = "{{ route('payment.finish') }}?order_id=" + result.order_id;
                 },
 

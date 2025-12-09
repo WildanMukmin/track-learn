@@ -12,7 +12,7 @@ class Certificate extends Model
         'course_id',
         'file_path',
         'claimed_at',
-        'payment_id', // tambahkan ini
+        'payment_id',
     ];
 
     public function payment()

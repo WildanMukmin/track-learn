@@ -15,7 +15,6 @@ class AuthController extends Controller
      */
     public function showLogin()
     {
-        // Redirect if already authenticated
         if (Auth::check()) {
             return $this->redirectBasedOnRole();
         }
@@ -28,7 +27,6 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // Validate input
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -48,15 +46,12 @@ class AuthController extends Controller
             ]);
         }
 
-        // Attempt login
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            // Redirect based on user role
             return $this->redirectBasedOnRole();
         }
 
-        // Login failed
         return back()->withErrors([
             'email' => 'Email atau password yang Anda masukkan salah.',
         ])->onlyInput('email');
@@ -67,7 +62,6 @@ class AuthController extends Controller
      */
     public function showRegister()
     {
-        // Redirect if already authenticated
         if (Auth::check()) {
             return $this->redirectBasedOnRole();
         }
@@ -80,7 +74,6 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        // Validate input
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -101,7 +94,6 @@ class AuthController extends Controller
             'terms.accepted' => 'Anda harus menyetujui syarat dan ketentuan',
         ]);
 
-        // Create user
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -109,13 +101,8 @@ class AuthController extends Controller
             'role' => $validated['role'],
         ]);
 
-        // // Login the user
-        // Auth::login($user);
 
-        // // Regenerate session
-        // $request->session()->regenerate();
 
-        // Redirect based on role with success message
         return redirect()->route('login')->with('status', 'Registrasi berhasil! Silahkan Tunggu Admin untuk menyetujui akun Anda.');
     }
 

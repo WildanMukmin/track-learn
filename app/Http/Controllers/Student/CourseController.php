@@ -28,24 +28,18 @@ class CourseController extends Controller
 
     public function show(Course $course)
     {
-        // Ambil data enrollment siswa
         $enrollment = Enrollment::where('course_id', $course->id)
             ->where('student_id', Auth::id())
             ->firstOrFail();
 
-        // Ambil semua materi
         $materials = $course->materials;
 
-        // Ambil progress materi (sudah/belum selesai)
         $progress = MaterialProgress::where('enrollment_id', $enrollment->id)->get();
         
-        // ambil daftar kuis kursus
         $quizzes = $course->quizzes; 
 
-        // Ambil status kuis siswa
         $quizAttempts = $enrollment->quizAttempts()->get();
 
-        // Hitung progress belajar (persentase materi selesai)
         $totalMaterial = $materials->count();
         $completedMaterial = $progress->where('is_completed', true)->count();
         $materialPercentage = $totalMaterial > 0 

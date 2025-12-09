@@ -140,10 +140,8 @@
 
         <!-- Sertifikat -->
 @php
-    // Hitung total kuis
     $totalQuiz = $quizzes->count();
 
-    // Hitung kuis lulus (attempt terbaru)
     $passedQuiz = $quizzes->filter(function ($quiz) use ($quizAttempts) {
         $attempt = $quizAttempts->where('quiz_id', $quiz->id)
                                 ->sortByDesc('created_at')
@@ -151,40 +149,31 @@
         return $attempt && $attempt->is_passed;
     })->count();
 
-    // Syarat materi
     $allMaterialDone = ($completedMaterial == $totalMaterial);
 
-    // Jika tidak ada kuis → otomatis kuis dianggap selesai
     $quizDone = ($totalQuiz == 0) ? true : ($passedQuiz == $totalQuiz);
 
-    // Sertifikat siap jika materi selesai + semua kuis lulus
     $certificateReady = $allMaterialDone && $quizDone;
 
-    // Progress sertifikat (materi 50% + kuis 50%)
     $certificateProgress = 0;
 
-    // Materi (50%)
     if ($totalMaterial > 0) {
         $certificateProgress += ($completedMaterial / $totalMaterial) * 50;
     }
 
-    // Kuis (50%)
     if ($totalQuiz > 0) {
         $certificateProgress += ($passedQuiz / $totalQuiz) * 50;
     } else {
-        // Jika tidak ada kuis → beri 50 poin penuh
         $certificateProgress += 50;
     }
 
     $certificateProgress = intval(min(100, max(0, $certificateProgress)));
 
-    // Cek pembayaran
     $hasPaid = \App\Models\Payment::where('user_id', auth()->id())
                 ->where('course_id', $course->id)
                 ->where('transaction_status', 'settlement')
                 ->exists();
 
-    // Cek sertifikat sudah di-claim atau belum
     $certificateClaimed = \App\Models\Certificate::where('user_id', auth()->id())
                             ->where('course_id', $course->id)
                             ->exists();

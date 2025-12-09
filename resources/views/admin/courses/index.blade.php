@@ -378,7 +378,6 @@
             });
         }
 
-        // Real-time search
         document.getElementById('searchInput').addEventListener('input', filterCourses);
         document.getElementById('teacherFilter').addEventListener('change', filterCourses);
     </script>

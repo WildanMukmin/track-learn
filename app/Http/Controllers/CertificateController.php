@@ -16,7 +16,7 @@ class CertificateController extends Controller
 
         $pdf = Pdf::loadView('certificates.template', [
             'userName' => $user->name,
-            'courseName' => $course->title, // ← perbaikan
+            'courseName' => $course->title, 
             'date' => now()->format('d F Y'),
         ])->setPaper('A4', 'landscape');
 
@@ -28,7 +28,6 @@ class CertificateController extends Controller
         $user = auth()->user();
         $course = Course::findOrFail($courseId);
 
-        // Cek apakah sudah klaim
         $exists = Certificate::where('user_id', $user->id)
             ->where('course_id', $courseId)
             ->first();
@@ -37,7 +36,6 @@ class CertificateController extends Controller
             return back()->with('info', 'Sertifikat sudah pernah diklaim.');
         }
 
-        // Cek apakah sudah bayar
         $payment = Payment::where('user_id', $user->id)
             ->where('course_id', $courseId)
             ->where('transaction_status', 'settlement')
@@ -48,7 +46,6 @@ class CertificateController extends Controller
                 ->with('info', 'Silakan selesaikan pembayaran terlebih dahulu.');
         }
 
-        // Jika sudah bayar, buat sertifikat (seharusnya sudah dibuat di callback)
         Certificate::firstOrCreate([
             'user_id' => $user->id,
             'course_id' => $courseId,
@@ -65,7 +62,6 @@ class CertificateController extends Controller
         $user = auth()->user();
         $course = Course::findOrFail($courseId);
 
-        // Pastikan sertifikat sudah diklaim dan dibayar
         $certificate = Certificate::where('user_id', $user->id)
                                   ->where('course_id', $courseId)
                                   ->whereHas('payment', function($q) {

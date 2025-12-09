@@ -87,7 +87,6 @@ class UserController extends Controller
             $user->email_verified_at = null;
         }
 
-        // Only update password if provided
         if ($request->filled('password')) {
             $user->password = Hash::make($validated['password']);
         }
@@ -103,7 +102,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // Prevent deleting own account
         if ($user->id === auth()->id()) {
             return redirect()->route('admin.users.index')
                 ->with('error', 'Anda tidak dapat menghapus akun Anda sendiri!');

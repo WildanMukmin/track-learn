@@ -24,7 +24,7 @@ class CourseController extends Controller
         $teachers = User::where('role', 'teacher')->get();
         
         $totalCourses = Course::count();
-        $activeCourses = Course::count(); // Bisa ditambahkan logic untuk status aktif
+        $activeCourses = Course::count(); 
         $totalEnrollments = Enrollment::count();
         $activeTeachers = User::where('role', 'teacher')
             ->whereHas('coursesTeaching')
@@ -56,7 +56,6 @@ class CourseController extends Controller
             'teacher_id.exists' => 'Guru tidak ditemukan',
         ]);
 
-        // Verify the selected user is a teacher
         $teacher = User::find($validated['teacher_id']);
         if ($teacher->role !== 'teacher') {
             return redirect()->back()
@@ -114,7 +113,6 @@ class CourseController extends Controller
 
         $data = $request->only(['title', 'description', 'category', 'difficulty', 'duration']);
         if ($request->hasFile('thumbnail')) {
-            // hapus thumbnail lama jika ada
             if ($course->thumbnail) {
                 Storage::disk('public')->delete($course->thumbnail);
             }
@@ -132,7 +130,6 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        // Delete course (cascade will handle enrollments, materials, etc.)
         $course->delete();
 
         return redirect()->route('admin.courses.index')

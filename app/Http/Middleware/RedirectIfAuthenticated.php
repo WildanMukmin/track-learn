@@ -22,9 +22,7 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
 
-                // Ambil user yang sedang login
                 $user = Auth::guard($guard)->user();
-                // ATAU jika kamu pakai satu guard tapi punya kolom `role` di tabel users:
                 switch ($user->role) {
                     case 'admin':
                         return redirect('/admin/dashboard');

@@ -12,7 +12,6 @@ class CourseController extends Controller
 {
     public function destroy(Course $course)
     {
-        // Pastikan hanya guru pemilik yang bisa menghapus kursus
         if ($course->teacher_id !== Auth::id()) {
             abort(403, 'Anda tidak memiliki akses untuk menghapus kursus ini.');
         }
@@ -23,7 +22,6 @@ class CourseController extends Controller
     {
         $teacherId = Auth::id();
 
-        // Ambil kursus milik guru + hitung jumlah siswa yang enroll
         $courses = Course::withCount('students')
             ->where('teacher_id', $teacherId)
             ->get();
@@ -64,10 +62,9 @@ class CourseController extends Controller
 
     public function show($id)
     {
-        // Ambil kursus + data siswa yang enroll
         $course = Course::with('students')
             ->where('id', $id)
-            ->where('teacher_id', Auth::id()) // memastikan guru hanya melihat kursusnya sendiri
+            ->where('teacher_id', Auth::id()) 
             ->firstOrFail();
 
         return view('teacher.courses.show', compact('course'));
@@ -87,7 +84,6 @@ class CourseController extends Controller
 
         $data = $request->only(['title', 'description', 'category', 'difficulty', 'duration']);
         if ($request->hasFile('thumbnail')) {
-            // hapus thumbnail lama jika ada
             if ($course->thumbnail) {
                 Storage::disk('public')->delete($course->thumbnail);
             }
