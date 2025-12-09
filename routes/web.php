@@ -31,6 +31,15 @@ use App\Http\Controllers\Student\QuizController as StudentQuizController;
 Route::get('/', [DashboardController::class, 'home'])->name('home');
 Route::get('/certificate/{courseId}', [CertificateController::class, 'generate']);
 
+Route::get('/storage/{path}', function ($path) {
+    $file = storage_path('app/public/' . $path);
+
+    if (!file_exists($file)) {
+        abort(404);
+    }
+
+    return response()->file($file);
+})->where('path', '.*');
 
 // 👤 Guest Routes
 Route::middleware('guest')->group(function () {

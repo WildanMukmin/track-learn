@@ -87,12 +87,13 @@
                                     <span>{{ $enrollment->course->teacher->name }}</span>
                                 </div>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold ml-4
-                                                                                @if($enrollment->status == 'passed' || $enrollment->status == 'certificate_issued') bg-green-100 text-green-600
-                                                                                @elseif($enrollment->status == 'in_progress' || $enrollment->status == 'material_completed') bg-blue-100 text-blue-600
-                                                                                @elseif($enrollment->status == 'quiz_attempted') bg-yellow-100 text-yellow-600
-                                                                                @else bg-gray-100 text-gray-600
-                                                                                @endif">
+                            <span
+                                class="px-3 py-1 rounded-full text-xs font-semibold ml-4
+                                                                                                                                @if($enrollment->status == 'passed' || $enrollment->status == 'certificate_issued') bg-green-100 text-green-600
+                                                                                                                                @elseif($enrollment->status == 'in_progress' || $enrollment->status == 'material_completed') bg-blue-100 text-blue-600
+                                                                                                                                @elseif($enrollment->status == 'quiz_attempted') bg-yellow-100 text-yellow-600
+                                                                                                                                @else bg-gray-100 text-gray-600
+                                                                                                                                @endif">
                                 {{ ucfirst(str_replace('_', ' ', $enrollment->status)) }}
                             </span>
                         </div>
@@ -116,7 +117,7 @@
             <div class="text-center py-12">
                 <i class="fas fa-book-open text-6xl text-gray-300 mb-4"></i>
                 <p class="text-gray-500 mb-4">Anda belum mendaftar kursus apapun</p>
-                <a href="/student/cari-kursus"
+                <a href="{{ url('student/cari-kursus') }}"
                     class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
                     <i class="fas fa-search mr-2"></i>Cari Kursus Menarik
                 </a>

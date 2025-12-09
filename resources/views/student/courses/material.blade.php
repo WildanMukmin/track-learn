@@ -171,21 +171,21 @@
 
             // Tampilkan loading state
             summaryContainer.innerHTML = `
-                                            <div class="p-5 bg-blue-50 border-2 border-blue-200 rounded-lg animate-pulse">
-                                                <div class="flex items-center">
-                                                    <svg class="animate-spin h-5 w-5 text-blue-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                    </svg>
-                                                    <p class="text-blue-700 font-semibold">Sedang membuat ringkasan dengan AI (Gemini)...</p>
-                                                </div>
-                                            </div>
-                                        `;
+                                                    <div class="p-5 bg-blue-50 border-2 border-blue-200 rounded-lg animate-pulse">
+                                                        <div class="flex items-center">
+                                                            <svg class="animate-spin h-5 w-5 text-blue-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                            </svg>
+                                                            <p class="text-blue-700 font-semibold">Sedang membuat ringkasan dengan AI (Gemini)...</p>
+                                                        </div>
+                                                    </div>
+                                                `;
 
             // --- KONFIGURASI GEMINI ---
 
             // 1. DAPATKAN API KEY ANDA DI: https://aistudio.google.com/app/apikey
-            const API_KEY = 'AIzaSyDhFeD346hFq_jEt49JSklKeTkZJFwPt1k';
+            const API_KEY = '{{ config('gemini.gemini_api_key') }}';
 
             // 2. URL Endpoint untuk Gemini 1.5 Flash (Gratis & Cepat)
             const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
@@ -195,8 +195,8 @@
 
             const promptText = `Buatkan ringkasan poin-poin penting (bullet points) yang mudah dipahami oleh siswa dari materi berikut. Gunakan Bahasa Indonesia yang santai tapi edukatif. Maksimal 5 poin. Outputkan dalam format Markdown. Langsung materinya saja
 
-                                        Materi:
-                                        ${contentForAPI}`;
+                                                Materi:
+                                                ${contentForAPI}`;
 
             try {
                 const response = await fetch(API_URL, {
@@ -230,19 +230,19 @@
                     const htmlContent = marked.parse(aiText);
 
                     summaryContainer.innerHTML = `
-                                                    <div class="p-6 bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg shadow-sm mt-6">
-                                                        <div class="flex items-center mb-4">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-indigo-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                                            </svg>
-                                                            <h3 class="text-xl font-bold text-indigo-900">Ringkasan Materi (AI)</h3>
-                                                        </div>
-                                                        <div class="prose prose-sm max-w-none text-gray-800 leading-relaxed list-disc pl-4">
-                                                            ${htmlContent}
-                                                        </div>
-                                                        <p class="text-xs text-gray-500 mt-4 italic">Dihasilkan oleh Gemini AI</p>
-                                                    </div>
-                                                `;
+                                                            <div class="p-6 bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-lg shadow-sm mt-6">
+                                                                <div class="flex items-center mb-4">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-indigo-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                                    </svg>
+                                                                    <h3 class="text-xl font-bold text-indigo-900">Ringkasan Materi (AI)</h3>
+                                                                </div>
+                                                                <div class="prose prose-sm max-w-none text-gray-800 leading-relaxed list-disc pl-4">
+                                                                    ${htmlContent}
+                                                                </div>
+                                                                <p class="text-xs text-gray-500 mt-4 italic">Dihasilkan oleh Gemini AI</p>
+                                                            </div>
+                                                        `;
                 } else {
                     throw new Error("Struktur respons API tidak dikenali.");
                 }
@@ -250,11 +250,11 @@
             } catch (error) {
                 console.error("💥 Error:", error);
                 summaryContainer.innerHTML = `
-                                                <div class="p-4 bg-red-50 border-2 border-red-200 text-red-700 text-sm rounded-lg mt-6">
-                                                    <p class="font-bold">Gagal memuat ringkasan.</p>
-                                                    <p class="text-xs mt-1">Pastikan API Key benar dan kuota tersedia.</p>
-                                                </div>
-                                            `;
+                                                        <div class="p-4 bg-red-50 border-2 border-red-200 text-red-700 text-sm rounded-lg mt-6">
+                                                            <p class="font-bold">Gagal memuat ringkasan.</p>
+                                                            <p class="text-xs mt-1">Pastikan API Key benar dan kuota tersedia.</p>
+                                                        </div>
+                                                    `;
             }
         });
     </script>

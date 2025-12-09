@@ -346,16 +346,16 @@
 
         function confirmDelete(courseId) {
             const form = document.getElementById('deleteForm');
-            form.action = `/admin/courses/${courseId}`;
+            form.action = "{{ url('admin/courses') }}/" + courseId;
             openModal('deleteModal');
         }
 
         function editCourse(courseId) {
-            window.location.href = `/admin/courses/${courseId}/edit`;
+            window.location.href = "{{ url('admin/courses') }}/" + courseId + "/edit";
         }
 
         function viewCourse(courseId) {
-            window.location.href = `/admin/courses/${courseId}`;
+            window.location.href = "{{ url('admin/courses') }}/" + courseId;
         }
 
         function filterCourses() {
